@@ -16,9 +16,61 @@ const readBody = (req) => {
   }
 };
 
+async function createRazorpayOrder({ donorName, amount, currency }) {
+  const apiKey = process.env.RAZORPAY_KEY_ID;
+  const apiSecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!apiKey || !apiSecret) {
+    throw new Error('Razorpay credentials are not configured.');
+  }
+
+  const response = await fetch('https://api.razorpay.com/v1/orders', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      amount: Math.round(Number(amount) * 100),
+      currency,
+      receipt: `rcpt_${Date.now()}`,
+      notes: {
+        donorName,
+      },
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.error?.description || 'Could not create order.');
+  }
+
+  return {
+    ok: true,
+    orderId: data.id,
+    amount: data.amount,
+    currency: data.currency,
+    receipt: data.receipt,
+  };
+}
+
 export default async ({ req, res, log, error }) => {
   try {
     const body = readBody(req);
+    if (body.action === 'create-order') {
+      const donorName = String(body.donorName || '').trim();
+      const amount = Number(body.amount || 0);
+      const currency = String(body.currency || 'INR').toUpperCase();
+
+      if (!donorName || !amount) {
+        return json(res, { ok: false, message: 'Missing donor name or amount.' }, 400);
+      }
+
+      const order = await createRazorpayOrder({ donorName, amount, currency });
+      return json(res, order);
+    }
+
     const {
       donor,
       amount,

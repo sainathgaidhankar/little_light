@@ -85,6 +85,18 @@ export const openRazorpayCheckout = async ({
     return;
   }
 
+  const orderResult = await createDonationExecution({
+    action: 'create-order',
+    donorName: donor.name,
+    amount,
+    currency: campaignDefaults.currency,
+  });
+
+  if (!orderResult.ok || !orderResult.orderId) {
+    onError?.(orderResult.message || 'Unable to create payment order.');
+    return;
+  }
+
   const options = {
     key: campaignDefaults.razorpayKeyId,
     amount: Math.round(Number(amount) * 100),
@@ -92,6 +104,7 @@ export const openRazorpayCheckout = async ({
     name: campaignDefaults.title,
     description: `Donation for ${campaignDefaults.beneficiaryName}`,
     image: campaignDefaults.razorpayLogo || undefined,
+    order_id: orderResult.orderId,
     prefill: {
       name: donor.name,
     },
@@ -107,7 +120,7 @@ export const openRazorpayCheckout = async ({
           paymentMethod: 'razorpay',
           gateway: 'razorpay',
           gatewayPaymentId: response.razorpay_payment_id,
-          gatewayOrderId: response.razorpay_order_id,
+          gatewayOrderId: response.razorpay_order_id || orderResult.orderId,
           gatewaySignature: response.razorpay_signature,
           utrNumber: response.razorpay_payment_id,
           status: 'completed',

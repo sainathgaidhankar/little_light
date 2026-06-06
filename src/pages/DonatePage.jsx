@@ -28,11 +28,11 @@ export default function DonatePage() {
     <div className="page-stack">
       <section className="panel page-intro">
         <span className="eyebrow">Donate</span>
-        <h1>Donate with one button, then choose your payment app.</h1>
+        <h1>Donate in one checkout.</h1>
         <p className="body-copy">
-          Enter your name and amount, click Donate, then choose Google Pay, PhonePe, or Paytm
-          from the payment chooser. After payment, share the UTR or screenshot with the admin for
-          verification.
+          Enter your name and amount, click Donate, and the checkout will show the payment methods
+          available on the donor&apos;s device. After payment, the donation is stored in Appwrite
+          and later verified by admin.
         </p>
       </section>
 
@@ -43,14 +43,14 @@ export default function DonatePage() {
           <section className="panel">
             <div className="section-heading">
               <span className="eyebrow">Fast pay</span>
-              <h2>QR and UPI ID for backup payment.</h2>
+              <h2>QR and UPI ID as backup.</h2>
             </div>
             <div className="donate-quick-pay">
               <img src={qrImage} alt="Donation QR code" className="donate-qr" />
               <div className="donate-quick-pay-copy">
                 <p className="body-copy">
-                  If the app chooser does not open on your device, scan this QR or copy the UPI ID
-                  here and pay manually in your own app.
+                  If the donor&apos;s device shows no checkout, scan this QR or copy the UPI ID and
+                  pay in the UPI app directly.
                 </p>
                 <p className="meta-label">UPI ID</p>
                 <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>

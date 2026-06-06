@@ -140,6 +140,7 @@ APPWRITE_DONATIONS_COLLECTION_ID=your_donations_collection_id
 APPWRITE_UPDATES_COLLECTION_ID=your_updates_collection_id
 APPWRITE_STORAGE_BUCKET_ID=your_bucket_id
 APPWRITE_API_KEY=your_appwrite_api_key
+RAZORPAY_KEY_ID=your_razorpay_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_secret
 ```
 
@@ -230,4 +231,3 @@ Use this rule:
 - `bank_transfer` stays `pending` until admin verifies it
 - `razorpay` is marked `verified` after gateway verification
 - public totals sum only verified donations
-
