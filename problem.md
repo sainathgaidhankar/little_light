@@ -7,6 +7,9 @@ Build a donation flow where a donor can enter an amount, pay successfully, and h
 - Clicking `Donate now` shows `Failed to fetch` in the UI.
 - In Appwrite, the `create-donation` function executions page shows **zero executions**.
 - This means the browser request is not reaching the function at all, or it is being blocked before Appwrite logs an execution.
+- After fixing the browser/platform issue, Appwrite executions now appear, but they fail with:
+  - `503 Failed`
+  - `Failed to load entrypoint, file src/main.js does not exist.`
 
 ## What Exists
 
@@ -76,12 +79,22 @@ The function currently does both:
 - `create-donation` exists.
 - `create-donation` shows no executions.
 - The browser displays `Failed to fetch`.
+- A later screenshot shows `create-donation` executions with `503 Failed`.
+- The execution error text is `Failed to load entrypoint, file src/main.js does not exist.`
 
 ## Things That Have Already Been Checked
 - Function exists in Appwrite.
 - Function execute access was set to `Any`.
 - Function secrets/API keys were entered in Appwrite function settings.
 - Frontend `.env` has the function ID values.
+- The local repository now contains:
+  - `appwrite/functions/create-donation/src/main.js`
+  - `appwrite/functions/get-totals/src/main.js`
+- The local `src/main.js` files currently contain:
+```js
+export { default } from '../index.js';
+```
+- Appwrite is still failing until the deployment is updated to include those files or the function entrypoint is changed to a file that exists in the deployed package.
 
 ## Important Code Paths To Inspect
 
@@ -112,11 +125,15 @@ VITE_APPWRITE_PROJECT_ID=6a23e8b600393c746741
 - Is the Appwrite Web platform/origin configured correctly for the current local dev host?
 - Is the browser request being blocked before the function runs?
 - Is there a mismatch between the frontend origin and the Appwrite platform configuration?
+- Why is the deployed function package still missing `src/main.js` even though the local repo now has it?
+- Does the Appwrite deployment need to be recreated from the updated function folder?
+- Is the function entrypoint set to `src/main.js` in Appwrite settings while the deployment package does not include it?
 
 ## Expected Outcome
 - Clicking `Donate now` should open a valid checkout flow.
 - A successful payment should be written to Appwrite.
 - Public totals should update from the stored donation record.
+- The deployed function package should include the `src/main.js` entrypoint Appwrite is trying to load.
 
 ## Notes For Another AI
 Please focus on the reason the browser request to Appwrite is failing before the function execution is created. Do not assume the payment gateway is the primary issue unless the function call itself is confirmed working.
