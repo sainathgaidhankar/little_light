@@ -9,7 +9,7 @@ export default function BankDetails() {
   ];
 
   return (
-    <section className="panel bank-panel">
+    <section className="panel bank-panel" id="bank-transfer-details">
       <div className="section-heading">
         <span className="eyebrow">Fallback option</span>
         <h2>Direct bank transfer details.</h2>

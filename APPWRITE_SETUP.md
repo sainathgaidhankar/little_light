@@ -140,8 +140,6 @@ APPWRITE_DONATIONS_COLLECTION_ID=your_donations_collection_id
 APPWRITE_UPDATES_COLLECTION_ID=your_updates_collection_id
 APPWRITE_STORAGE_BUCKET_ID=your_bucket_id
 APPWRITE_API_KEY=your_appwrite_api_key
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_secret
 ```
 
 ## 7) Fill The Frontend `.env`
@@ -168,29 +166,21 @@ VITE_BANK_ACCOUNT_NUMBER=20147810747
 VITE_BANK_IFSC=SBIN0001861
 VITE_BANK_NAME=STATE BANK OF INDIA
 VITE_BANK_UPI_ID=
-VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
-VITE_RAZORPAY_LOGO_URL=
 VITE_HOSPITAL_MAP_URL=https://maps.app.goo.gl/a5fSWeRyebtsck4j6?g_st=aw
 VITE_PATIENT_CONTACT_NUMBER=+91 70454 93868
 ```
 
 ## 8) Donation Flow
 
-### Razorpay donations
+### UPI donations
 
 1. Donor enters name and amount.
-2. Razorpay opens.
-3. After payment succeeds, the gateway payment ID, order ID, and signature are stored.
-4. Donation status should be `completed` or `verified` only after verification.
-
-### Bank transfer donations
-
-1. Donor enters name and amount.
-2. Donor makes the bank or UPI transfer.
-3. Donor enters the UTR / transaction ID.
-4. Donor uploads a screenshot if you add that field.
-5. Admin verifies the payment manually.
-6. Only then set `status = verified`.
+2. The phone opens the installed UPI apps through the UPI intent.
+3. The donor completes payment in PhonePe, Google Pay, Paytm, BHIM, or another installed app.
+4. The donation is stored in Appwrite as `pending`.
+5. Donor shares UTR or screenshot.
+6. Admin verifies the payment manually.
+7. Only then set `status = verified`.
 
 Important:
 

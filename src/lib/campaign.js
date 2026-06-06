@@ -52,8 +52,6 @@ The goal amount of the campaign may be higher than the attached estimates to add
   bankIfsc: import.meta.env.VITE_BANK_IFSC || 'SBIN0001861',
   bankName: import.meta.env.VITE_BANK_NAME || 'STATE BANK OF INDIA',
   bankUpiId: import.meta.env.VITE_BANK_UPI_ID || '',
-  razorpayKeyId: import.meta.env.VITE_RAZORPAY_KEY_ID || '',
-  razorpayLogo: import.meta.env.VITE_RAZORPAY_LOGO_URL || '',
 };
 
 export const formatCurrency = (value, currency = campaignDefaults.currency) =>

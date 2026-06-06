@@ -91,7 +91,8 @@ Set the following environment variables in the function settings:
 - `APPWRITE_UPDATES_COLLECTION_ID`
 - `APPWRITE_STORAGE_BUCKET_ID`
 - `APPWRITE_API_KEY`
-- `RAZORPAY_KEY_ID`
-- `RAZORPAY_KEY_SECRET`
 
 Allow `Any` execute access on the functions if they are called directly from the browser.
+
+The donate flow uses a UPI intent, so the donor's installed UPI apps open on supported devices.
+The donation is stored as `pending` and manually verified later with UTR or screenshot proof.

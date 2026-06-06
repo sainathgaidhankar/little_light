@@ -28,11 +28,12 @@ export default function DonatePage() {
     <div className="page-stack">
       <section className="panel page-intro">
         <span className="eyebrow">Donate</span>
-        <h1>Donate in one checkout.</h1>
+        <h1>Choose a payment method.</h1>
         <p className="body-copy">
-          Enter your name and amount, click Donate, and the checkout will show the payment methods
-          available on the donor&apos;s device. After payment, the donation is stored in Appwrite
-          and later verified by admin.
+          Enter your name and amount, click Donate now, and pick UPI, direct bank, net banking,
+          or Razorpay. If you choose UPI, the phone can open the installed apps on supported
+          devices, including PhonePe, Google Pay, Paytm, BHIM, and other UPI apps. After payment,
+          the donation is stored in Appwrite and later verified by admin.
         </p>
       </section>
 
@@ -40,30 +41,35 @@ export default function DonatePage() {
         <DonationForm />
         <div className="stack-column">
           <ProgressBar raised={campaign.raised} target={campaign.targetAmount} />
-          <section className="panel">
-            <div className="section-heading">
-              <span className="eyebrow">Fast pay</span>
-              <h2>QR and UPI ID as backup.</h2>
-            </div>
-            <div className="donate-quick-pay">
-              <img src={qrImage} alt="Donation QR code" className="donate-qr" />
-              <div className="donate-quick-pay-copy">
-                <p className="body-copy">
-                  If the donor&apos;s device shows no checkout, scan this QR or copy the UPI ID and
-                  pay in the UPI app directly.
-                </p>
-                <p className="meta-label">UPI ID</p>
-                <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>
-                <div className="donate-actions">
-                  <button type="button" className="ghost-button" onClick={copyUpi}>
-                    Copy UPI ID
-                  </button>
-                </div>
-                {copyStatus ? <p className="status-message">{copyStatus}</p> : null}
+          <details className="panel fallback-pay-panel">
+            <summary className="fallback-pay-summary">
+              <div>
+                <span className="eyebrow">More ways to pay</span>
+                <h2>QR and bank transfer backup</h2>
               </div>
+              <span className="fallback-pay-hint">Open</span>
+            </summary>
+            <div className="fallback-pay-content">
+              <div className="donate-quick-pay">
+                <img src={qrImage} alt="Donation QR code" className="donate-qr" />
+                <div className="donate-quick-pay-copy">
+                  <p className="body-copy">
+                    If the checkout does not open, scan this QR or copy the UPI ID and pay in the
+                    UPI app directly.
+                  </p>
+                  <p className="meta-label">UPI ID</p>
+                  <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>
+                  <div className="donate-actions">
+                    <button type="button" className="ghost-button" onClick={copyUpi}>
+                      Copy UPI ID
+                    </button>
+                  </div>
+                  {copyStatus ? <p className="status-message">{copyStatus}</p> : null}
+                </div>
+              </div>
+              <BankDetails />
             </div>
-          </section>
-          <BankDetails />
+          </details>
         </div>
       </div>
     </div>

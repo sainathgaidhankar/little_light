@@ -409,7 +409,7 @@ textarea {
 
 .upi-app-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
   margin-top: 8px;
 }
@@ -447,10 +447,6 @@ textarea {
   padding: 20px;
   display: grid;
   gap: 18px;
-}
-
-.modal-grid {
-  grid-template-columns: 1fr;
 }
 
 .modal-app {
@@ -524,6 +520,43 @@ textarea {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.fallback-pay-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.fallback-pay-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 1.2rem 1.25rem;
+}
+
+.fallback-pay-summary::-webkit-details-marker {
+  display: none;
+}
+
+.fallback-pay-hint {
+  font-family: system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--brand);
+  background: rgba(13, 128, 121, 0.08);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  white-space: nowrap;
+}
+
+.fallback-pay-content {
+  border-top: 1px solid rgba(20, 31, 48, 0.08);
+  padding: 1.25rem;
+  display: grid;
+  gap: 16px;
 }
 
 .status-message {
