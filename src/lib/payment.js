@@ -38,7 +38,11 @@ export const buildUpiIntentUrl = ({ amount, note }) => {
 
   const params = new URLSearchParams({
     pa: upiId,
-    pn: campaignDefaults.bankAccountName || campaignDefaults.beneficiaryName || campaignDefaults.title,
+    pn:
+      campaignDefaults.bankAccountHolderName ||
+      campaignDefaults.beneficiaryName ||
+      campaignDefaults.bankAccountName ||
+      campaignDefaults.title,
     am: String(Number(amount || 0)),
     cu: campaignDefaults.currency,
   });

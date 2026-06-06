@@ -438,6 +438,33 @@ textarea {
   width: 100%;
 }
 
+.donate-quick-pay {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.donate-qr {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--panel-border);
+  background: #fff;
+}
+
+.donate-quick-pay-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.donate-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .status-message {
   margin: 0;
   color: var(--navy);
@@ -988,6 +1015,11 @@ textarea {
 
   .quick-amounts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .donate-quick-pay {
+    grid-template-columns: 1fr;
+    justify-items: center;
   }
 
   .donation-panel {

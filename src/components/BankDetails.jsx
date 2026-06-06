@@ -3,7 +3,7 @@ import { campaignDefaults } from '../lib/campaign';
 export default function BankDetails() {
   const fields = [
     { label: 'Bank name', value: campaignDefaults.bankName },
-    { label: 'Account name', value: campaignDefaults.bankAccountName },
+    { label: 'Account holder name', value: campaignDefaults.bankAccountHolderName },
     { label: 'Account number', value: campaignDefaults.bankAccountNumber },
     { label: 'IFSC', value: campaignDefaults.bankIfsc },
   ];

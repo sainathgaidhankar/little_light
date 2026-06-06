@@ -44,6 +44,10 @@ The goal amount of the campaign may be higher than the attached estimates to add
     'https://maps.app.goo.gl/a5fSWeRyebtsck4j6?g_st=aw',
   patientContactNumber: import.meta.env.VITE_PATIENT_CONTACT_NUMBER || '+91 70454 93868',
   bankAccountName: import.meta.env.VITE_BANK_ACCOUNT_NAME || 'SHEHBAAZ SHAIKH',
+  bankAccountHolderName:
+    import.meta.env.VITE_BANK_ACCOUNT_HOLDER_NAME ||
+    import.meta.env.VITE_BANK_ACCOUNT_NAME ||
+    'SHEHBAAZ SHAIKH',
   bankAccountNumber: import.meta.env.VITE_BANK_ACCOUNT_NUMBER || '20147810747',
   bankIfsc: import.meta.env.VITE_BANK_IFSC || 'SBIN0001861',
   bankName: import.meta.env.VITE_BANK_NAME || 'STATE BANK OF INDIA',

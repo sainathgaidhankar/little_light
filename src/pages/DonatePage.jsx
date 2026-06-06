@@ -1,10 +1,28 @@
+import { useState } from 'react';
 import DonationForm from '../components/DonationForm';
 import BankDetails from '../components/BankDetails';
 import ProgressBar from '../components/ProgressBar';
 import { useCampaign } from '../context/CampaignContext';
+import { campaignDefaults } from '../lib/campaign';
+import qrImage from '/images/Qr.jpeg';
 
 export default function DonatePage() {
   const { campaign } = useCampaign();
+  const [copyStatus, setCopyStatus] = useState('');
+
+  const copyUpi = async () => {
+    if (!campaignDefaults.bankUpiId) {
+      setCopyStatus('UPI ID is not configured.');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(campaignDefaults.bankUpiId);
+      setCopyStatus('UPI ID copied.');
+    } catch {
+      setCopyStatus('Could not copy the UPI ID.');
+    }
+  };
 
   return (
     <div className="page-stack">
@@ -22,6 +40,29 @@ export default function DonatePage() {
         <DonationForm />
         <div className="stack-column">
           <ProgressBar raised={campaign.raised} target={campaign.targetAmount} />
+          <section className="panel">
+            <div className="section-heading">
+              <span className="eyebrow">Fast pay</span>
+              <h2>Scan QR or copy the UPI ID.</h2>
+            </div>
+            <div className="donate-quick-pay">
+              <img src={qrImage} alt="Donation QR code" className="donate-qr" />
+              <div className="donate-quick-pay-copy">
+                <p className="body-copy">
+                  If the app button does not open, scan this QR in Google Pay, PhonePe, Paytm, or
+                  any UPI app.
+                </p>
+                <p className="meta-label">UPI ID</p>
+                <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>
+                <div className="donate-actions">
+                  <button type="button" className="ghost-button" onClick={copyUpi}>
+                    Copy UPI ID
+                  </button>
+                </div>
+                {copyStatus ? <p className="status-message">{copyStatus}</p> : null}
+              </div>
+            </div>
+          </section>
           <BankDetails />
         </div>
       </div>
