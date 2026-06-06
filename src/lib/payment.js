@@ -21,15 +21,22 @@ export const createDonationExecution = async (payload) => {
     return { ok: false, message: 'Donation function is not configured.' };
   }
 
-  const execution = await functions.createExecution({
-    functionId: ids.createDonationFunctionId,
-    method: 'POST',
-    async: false,
-    body: JSON.stringify(payload),
-  });
+  try {
+    const execution = await functions.createExecution({
+      functionId: ids.createDonationFunctionId,
+      method: 'POST',
+      async: false,
+      body: JSON.stringify(payload),
+    });
 
-  const responseBody = execution.responseBody ? JSON.parse(execution.responseBody) : {};
-  return responseBody;
+    const responseBody = execution.responseBody ? JSON.parse(execution.responseBody) : {};
+    return responseBody;
+  } catch (err) {
+    return {
+      ok: false,
+      message: err?.message || 'Donation function request failed.',
+    };
+  }
 };
 
 export const buildUpiIntentUrl = ({ amount, note }) => {
@@ -127,7 +134,11 @@ export const openRazorpayCheckout = async ({
         });
 
         if (!result.ok) {
-          onError?.(result.message || 'Donation log failed.');
+          onError?.(
+            result.message ||
+              result.error ||
+              'Donation log failed. Check function logs and permissions.'
+          );
           return;
         }
 
