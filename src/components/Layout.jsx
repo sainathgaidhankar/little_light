@@ -15,8 +15,9 @@ export default function Layout({ children }) {
     <div className="app-shell">
       <header className="site-header">
         <div className="brand-block">
-          <Link to="/" className="brand-mark">
-            Little Light Fund
+          <Link to="/" className="brand-mark brand-mark-with-logo">
+            <img src="/logo.svg" alt="Little Light Fund logo" className="brand-logo" />
+            <span>Little Light Fund</span>
           </Link>
           <p className="brand-subtitle">Direct support for a baby’s treatment and recovery</p>
         </div>

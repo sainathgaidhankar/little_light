@@ -1,0 +1,67 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Little Light Fund logo">
+  <defs>
+    <linearGradient id="bg" x1="96" y1="64" x2="416" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF3E0"/>
+      <stop offset="1" stop-color="#FFE0B2"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="168" y1="176" x2="344" y2="352" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8A00"/>
+      <stop offset="1" stop-color="#F15A24"/>
+    </linearGradient>
+    <linearGradient id="hand" x1="140" y1="304" x2="372" y2="408" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F766E"/>
+      <stop offset="1" stop-color="#34A59A"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="512" height="512" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#203864" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <circle cx="256" cy="256" r="224" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="208" fill="white" opacity="0.6"/>
+  <g filter="url(#shadow)">
+    <circle cx="256" cy="256" r="170" fill="white"/>
+  </g>
+
+  <path
+    d="M256 156C273 125 319 120 342 149C364 176 358 221 324 248L256 304L188 248C154 221 148 176 170 149C193 120 239 125 256 156Z"
+    fill="url(#heart)"
+  />
+
+  <path
+    d="M128 314C172 278 219 260 256 260C293 260 340 278 384 314C374 359 334 393 286 393H226C178 393 138 359 128 314Z"
+    fill="url(#hand)"
+  />
+
+  <path
+    d="M173 310C201 292 227 284 256 284C285 284 311 292 339 310"
+    stroke="white"
+    stroke-width="18"
+    stroke-linecap="round"
+    opacity="0.9"
+  />
+
+  <circle cx="215" cy="260" r="10" fill="white" opacity="0.9"/>
+  <circle cx="297" cy="260" r="10" fill="white" opacity="0.9"/>
+
+  <path
+    d="M256 208C270 208 282 220 282 234C282 248 270 259 256 268C242 259 230 248 230 234C230 220 242 208 256 208Z"
+    fill="white"
+    opacity="0.95"
+  />
+
+  <path
+    d="M97 114C113 94 134 83 158 80"
+    stroke="#FFB347"
+    stroke-width="12"
+    stroke-linecap="round"
+    opacity="0.65"
+  />
+  <path
+    d="M414 118C398 94 377 83 353 80"
+    stroke="#0F766E"
+    stroke-width="12"
+    stroke-linecap="round"
+    opacity="0.45"
+  />
+</svg>
