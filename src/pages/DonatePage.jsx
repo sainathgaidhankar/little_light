@@ -28,10 +28,10 @@ export default function DonatePage() {
     <div className="page-stack">
       <section className="panel page-intro">
         <span className="eyebrow">Donate</span>
-        <h1>Donate through Google Pay, PhonePe, or Paytm.</h1>
+        <h1>Donate with one button, then choose your payment app.</h1>
         <p className="body-copy">
-          Enter your name and amount, choose the app you want, and we will open it with the
-          payment ready. After payment, share the UTR or screenshot with the admin for
+          Enter your name and amount, click Donate, then choose Google Pay, PhonePe, or Paytm
+          from the payment chooser. After payment, share the UTR or screenshot with the admin for
           verification.
         </p>
       </section>
@@ -43,14 +43,14 @@ export default function DonatePage() {
           <section className="panel">
             <div className="section-heading">
               <span className="eyebrow">Fast pay</span>
-              <h2>Scan QR, or copy the UPI ID if your app needs it.</h2>
+              <h2>QR and UPI ID for backup payment.</h2>
             </div>
             <div className="donate-quick-pay">
               <img src={qrImage} alt="Donation QR code" className="donate-qr" />
               <div className="donate-quick-pay-copy">
                 <p className="body-copy">
-                  Choose Google Pay, PhonePe, or Paytm in the form. If your app does not open,
-                  scan this QR or copy the UPI ID here.
+                  If the app chooser does not open on your device, scan this QR or copy the UPI ID
+                  here and pay manually in your own app.
                 </p>
                 <p className="meta-label">UPI ID</p>
                 <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>

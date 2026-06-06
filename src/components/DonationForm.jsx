@@ -9,11 +9,17 @@ const initialState = {
   amount: '',
 };
 
+const upiApps = [
+  { id: 'google_pay', label: 'Google Pay' },
+  { id: 'phonepe', label: 'PhonePe' },
+  { id: 'paytm', label: 'Paytm' },
+];
+
 export default function DonationForm({ onComplete }) {
   const [form, setForm] = useState(initialState);
   const [status, setStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [upiApp, setUpiApp] = useState('google_pay');
+  const [chooserOpen, setChooserOpen] = useState(false);
 
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
@@ -21,48 +27,21 @@ export default function DonationForm({ onComplete }) {
 
   const selectedAmount = useMemo(() => Number(form.amount || 0), [form.amount]);
 
-  const submitPendingDonation = async () => {
-    const result = await createDonationExecution({
-      donor: {
-        name: form.name,
-        createdFrom: `upi-${upiApp}`,
-      },
-      amount: selectedAmount,
-      currency: campaignDefaults.currency,
-      paymentMethod: 'upi_manual',
-      gateway: upiApp,
-      status: 'pending',
-      transactionRef: `UPI-${Date.now()}`,
-      utrNumber: '',
-    });
+  const buildPendingPayload = (gateway) => ({
+    donor: {
+      name: form.name,
+      createdFrom: `upi-${gateway}`,
+    },
+    amount: selectedAmount,
+    currency: campaignDefaults.currency,
+    paymentMethod: 'upi_manual',
+    gateway,
+    status: 'pending',
+    transactionRef: `UPI-${Date.now()}`,
+    utrNumber: '',
+  });
 
-    if (!result.ok) throw new Error(result.message || 'Unable to record pledge.');
-    return result;
-  };
-
-  const handleManualUpi = async () => {
-    const result = await submitPendingDonation();
-    const opened = openUpiIntent({
-      amount: selectedAmount,
-      donorName: form.name,
-      onError: (message) => setStatus(message),
-    });
-
-    if (!opened) {
-      setSubmitting(false);
-      return;
-    }
-
-    setStatus(
-      `Opened ${upiApp.replace('_', ' ')}. Complete the payment, then send the UTR or screenshot to admin.`
-    );
-    setForm(initialState);
-    onComplete?.(result);
-    setSubmitting(false);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const launchUpiPayment = async (gateway) => {
     setSubmitting(true);
     setStatus('');
 
@@ -71,20 +50,55 @@ export default function DonationForm({ onComplete }) {
         throw new Error('Please enter your name and donation amount.');
       }
 
-      await handleManualUpi();
+      const result = await createDonationExecution(buildPendingPayload(gateway));
+      if (!result.ok) {
+        throw new Error(result.message || 'Unable to create donation record.');
+      }
+
+      const opened = openUpiIntent({
+        amount: selectedAmount,
+        donorName: form.name,
+        onError: (message) => setStatus(message),
+      });
+
+      if (!opened) {
+        throw new Error('Could not open the UPI app. Use the QR code or copy the UPI ID.');
+      }
+
+      setStatus(
+        `Opened ${upiApps.find((item) => item.id === gateway)?.label || 'UPI app'}. Complete payment there, then send the UTR or screenshot to admin.`
+      );
+      setForm(initialState);
+      setChooserOpen(false);
+      onComplete?.(result);
     } catch (err) {
       setStatus(err?.message || 'Something went wrong.');
+    } finally {
       setSubmitting(false);
     }
   };
 
-  const submitLabel = 'Open UPI app';
+  const openChooser = () => {
+    if (!form.name || !selectedAmount) {
+      setStatus('Please enter your name and donation amount.');
+      return;
+    }
+
+    setStatus('');
+    setChooserOpen(true);
+  };
 
   return (
-    <form className="panel donation-form" onSubmit={handleSubmit}>
+    <form
+      className="panel donation-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        openChooser();
+      }}
+    >
       <div className="section-heading">
         <span className="eyebrow">Donate now</span>
-        <h2>Pay with UPI apps like PhonePe and Google Pay.</h2>
+        <h2>Choose a payment app after you click Donate.</h2>
       </div>
 
       <label>
@@ -117,34 +131,49 @@ export default function DonationForm({ onComplete }) {
         ))}
       </div>
 
-      <div className="donation-methods">
-        <div className="method-card method-primary active">
-          <strong>Choose UPI app</strong>
-          <span>Select the app you want to pay with. We will open it with the amount ready.</span>
-          <div className="upi-app-grid">
-            <button type="button" className={`upi-app ${upiApp === 'google_pay' ? 'active' : ''}`} onClick={() => setUpiApp('google_pay')}>
-              Google Pay
-            </button>
-            <button type="button" className={`upi-app ${upiApp === 'phonepe' ? 'active' : ''}`} onClick={() => setUpiApp('phonepe')}>
-              PhonePe
-            </button>
-            <button type="button" className={`upi-app ${upiApp === 'paytm' ? 'active' : ''}`} onClick={() => setUpiApp('paytm')}>
-              Paytm
-            </button>
-          </div>
-        </div>
-      </div>
-
       <button className="primary-button donation-submit" disabled={submitting} type="submit">
-        {submitting ? 'Saving...' : submitLabel}
+        {submitting ? 'Working...' : 'Donate now'}
       </button>
 
       {status ? <p className="status-message">{status}</p> : null}
       <p className="form-note">
-        No email or registration is required. Enter your name and amount, then pay manually in
-        PhonePe, Google Pay, or any UPI app using the QR or UPI ID on this page. After paying,
-        send the UTR or screenshot to admin so the donation can be verified.
+        No email or registration is required. Click Donate, choose Google Pay, PhonePe, or Paytm,
+        and the donation record will be stored in Appwrite as pending until admin verifies the
+        UTR/screenshot.
       </p>
+
+      {chooserOpen ? (
+        <div className="payment-modal-backdrop" role="presentation" onClick={() => setChooserOpen(false)}>
+          <div
+            className="payment-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Choose payment app"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="section-heading">
+              <span className="eyebrow">Select app</span>
+              <h2>Choose where to pay</h2>
+            </div>
+            <div className="upi-app-grid modal-grid">
+              {upiApps.map((app) => (
+                <button
+                  key={app.id}
+                  type="button"
+                  className="upi-app modal-app"
+                  disabled={submitting}
+                  onClick={() => launchUpiPayment(app.id)}
+                >
+                  {app.label}
+                </button>
+              ))}
+            </div>
+            <button type="button" className="ghost-button modal-close" onClick={() => setChooserOpen(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : null}
     </form>
   );
 }
