@@ -32,6 +32,37 @@ export const createDonationExecution = async (payload) => {
   return responseBody;
 };
 
+export const buildUpiIntentUrl = ({ amount, note }) => {
+  const upiId = campaignDefaults.bankUpiId;
+  if (!upiId) return '';
+
+  const params = new URLSearchParams({
+    pa: upiId,
+    pn: campaignDefaults.bankAccountName || campaignDefaults.beneficiaryName || campaignDefaults.title,
+    am: String(Number(amount || 0)),
+    cu: campaignDefaults.currency,
+  });
+
+  if (note) params.set('tn', note);
+
+  return `upi://pay?${params.toString()}`;
+};
+
+export const openUpiIntent = ({ amount, donorName, onError }) => {
+  const url = buildUpiIntentUrl({
+    amount,
+    note: donorName ? `Donation from ${donorName}` : `Donation for ${campaignDefaults.beneficiaryName}`,
+  });
+
+  if (!url) {
+    onError?.('UPI ID is not configured.');
+    return false;
+  }
+
+  window.location.href = url;
+  return true;
+};
+
 export const openRazorpayCheckout = async ({
   donor,
   amount,
@@ -59,7 +90,6 @@ export const openRazorpayCheckout = async ({
     image: campaignDefaults.razorpayLogo || undefined,
     prefill: {
       name: donor.name,
-      email: donor.email,
     },
     theme: {
       color: '#0f766e',

@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { campaignDefaults } from '../lib/campaign';
-import { createDonationExecution, openRazorpayCheckout } from '../lib/payment';
+import { createDonationExecution, openRazorpayCheckout, openUpiIntent } from '../lib/payment';
+
+const quickAmounts = [500, 1000, 2500, 5000];
 
 const initialState = {
   name: '',
   amount: '',
-  paymentMethod: 'razorpay',
-  utrNumber: '',
 };
 
 export default function DonationForm({ onComplete }) {
@@ -18,23 +18,70 @@ export default function DonationForm({ onComplete }) {
     setForm((current) => ({ ...current, [field]: event.target.value }));
   };
 
+  const selectedAmount = useMemo(() => Number(form.amount || 0), [form.amount]);
+
   const submitBankTransfer = async () => {
     const result = await createDonationExecution({
       donor: {
         name: form.name,
         createdFrom: 'bank-transfer',
       },
-      amount: Number(form.amount),
+      amount: selectedAmount,
       currency: campaignDefaults.currency,
       paymentMethod: 'bank_transfer',
       gateway: 'manual',
       status: 'pending_bank_transfer',
       transactionRef: `BANK-${Date.now()}`,
-      utrNumber: form.utrNumber,
+      utrNumber: '',
     });
 
     if (!result.ok) throw new Error(result.message || 'Unable to record pledge.');
     return result;
+  };
+
+  const handleRazorpay = async () => {
+    await openRazorpayCheckout({
+      donor: {
+        name: form.name,
+        createdFrom: 'razorpay',
+      },
+      amount: selectedAmount,
+      onSuccess: (result) => {
+        setStatus('Payment complete and logged securely.');
+        setForm(initialState);
+        setSubmitting(false);
+        onComplete?.(result);
+      },
+      onError: (message) => {
+        setStatus(message);
+        setSubmitting(false);
+      },
+      onPending: (message) => {
+        setStatus(message);
+        setSubmitting(false);
+      },
+    });
+  };
+
+  const handleUpi = () => {
+    const opened = openUpiIntent({
+      amount: selectedAmount,
+      donorName: form.name,
+      onError: (message) => setStatus(message),
+    });
+
+    if (opened) {
+      setStatus('Opened UPI payment. Complete the payment in your app.');
+      setSubmitting(false);
+    }
+  };
+
+  const handleBankTransfer = async () => {
+    const result = await submitBankTransfer();
+    setStatus('Bank transfer reference saved. Add the UTR later if needed.');
+    setForm(initialState);
+    onComplete?.(result);
+    setSubmitting(false);
   };
 
   const handleSubmit = async (event) => {
@@ -43,57 +90,29 @@ export default function DonationForm({ onComplete }) {
     setStatus('');
 
     try {
-      if (!form.name || !form.amount) {
-        throw new Error('Please fill in name and amount.');
+      if (!form.name || !selectedAmount) {
+        throw new Error('Please enter your name and donation amount.');
       }
 
-      if (form.paymentMethod === 'razorpay') {
-        await openRazorpayCheckout({
-          donor: {
-            name: form.name,
-            createdFrom: 'razorpay',
-          },
-          amount: Number(form.amount),
-          onSuccess: (result) => {
-            setStatus('Payment complete and logged securely.');
-            setForm(initialState);
-            setSubmitting(false);
-            onComplete?.(result);
-          },
-          onError: (message) => {
-            setStatus(message);
-            setSubmitting(false);
-          },
-          onPending: (message) => {
-            setStatus(message);
-            setSubmitting(false);
-          },
-        });
+      if (campaignDefaults.bankUpiId) {
+        handleUpi();
         return;
       }
 
-      if (!form.utrNumber) {
-        throw new Error('Please enter the UTR / transaction ID for bank transfer.');
-      }
-
-      const result = await submitBankTransfer();
-      setStatus('Bank transfer pledge logged. Share the transfer reference with the family.');
-      setForm(initialState);
-      onComplete?.(result);
+      await handleRazorpay();
     } catch (err) {
       setStatus(err?.message || 'Something went wrong.');
-    } finally {
-      if (form.paymentMethod !== 'razorpay') {
-        setSubmitting(false);
-      }
+      setSubmitting(false);
     }
   };
+
+  const submitLabel = campaignDefaults.bankUpiId ? 'Pay with UPI apps' : 'Continue donation';
 
   return (
     <form className="panel donation-form" onSubmit={handleSubmit}>
       <div className="section-heading">
         <span className="eyebrow">Donate now</span>
-        <h2>Make a direct contribution to the beneficiary’s treatment.</h2>
+        <h2>One tap to pay with UPI, PhonePe, or Google Pay.</h2>
       </div>
 
       <label>
@@ -113,33 +132,59 @@ export default function DonationForm({ onComplete }) {
         />
       </label>
 
-      <label>
-        Payment method
-        <select value={form.paymentMethod} onChange={updateField('paymentMethod')}>
-          <option value="razorpay">Razorpay / UPI / Card</option>
-          <option value="bank_transfer">Direct bank transfer</option>
-        </select>
-      </label>
+      <div className="quick-amounts" aria-label="Quick amount options">
+        {quickAmounts.map((amount) => (
+          <button
+            key={amount}
+            type="button"
+            className={`quick-amount ${selectedAmount === amount ? 'active' : ''}`}
+            onClick={() => setForm((current) => ({ ...current, amount: String(amount) }))}
+          >
+            {amount.toLocaleString('en-IN')}
+          </button>
+        ))}
+      </div>
 
-      {form.paymentMethod === 'bank_transfer' ? (
-        <label>
-          UTR / transaction ID
-          <input
-            value={form.utrNumber}
-            onChange={updateField('utrNumber')}
-            placeholder="Enter UTR after transfer"
-          />
-        </label>
-      ) : null}
+      <div className="donation-methods">
+        <button
+          type="button"
+          className="method-card method-primary"
+          onClick={handleUpi}
+          disabled={submitting}
+        >
+          <strong>Pay with UPI apps</strong>
+          <span>Open Google Pay, PhonePe, Paytm, or any UPI app.</span>
+        </button>
 
-      <button className="primary-button" disabled={submitting}>
-        {submitting ? 'Processing...' : 'Continue donation'}
+        <button
+          type="button"
+          className="method-card"
+          onClick={handleRazorpay}
+          disabled={submitting}
+        >
+          <strong>Pay with Razorpay</strong>
+          <span>Use card, UPI, or net banking in one secure checkout.</span>
+        </button>
+
+        <button
+          type="button"
+          className="method-card"
+          onClick={handleBankTransfer}
+          disabled={submitting}
+        >
+          <strong>Bank transfer</strong>
+          <span>Use direct beneficiary account details if you prefer manual transfer.</span>
+        </button>
+      </div>
+
+      <button className="primary-button donation-submit" disabled={submitting}>
+        {submitting ? 'Opening payment...' : submitLabel}
       </button>
 
       {status ? <p className="status-message">{status}</p> : null}
       <p className="form-note">
-        Successful payments are recorded in Appwrite. Bank transfer details are shown separately for
-        a direct beneficiary payment path.
+        No email or registration is required. Enter your name, choose an amount, and pay with the
+        method you already use.
       </p>
     </form>
   );

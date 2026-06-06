@@ -29,7 +29,7 @@ export default async ({ req, res, error }) => {
     const totals = donations.documents.reduce(
       (acc, donation) => {
         const amount = Number(donation.amount || 0);
-        if (donation.status !== 'failed') {
+        if (donation.status === 'verified' || donation.status === 'completed') {
           acc.raised += amount;
           acc.count += 1;
         }
@@ -43,7 +43,9 @@ export default async ({ req, res, error }) => {
       raised: totals.raised,
       donations: totals.count,
       updates: visibleUpdates.documents,
-      recentDonations: donations.documents.slice(0, 5),
+      recentDonations: donations.documents
+        .filter((donation) => donation.status === 'verified' || donation.status === 'completed')
+        .slice(0, 5),
     });
   } catch (err) {
     error(String(err?.message || err));

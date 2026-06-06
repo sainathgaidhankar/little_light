@@ -31,13 +31,7 @@ export default function HomePage() {
 
   const hasStory = Boolean(campaign.story);
   const patientSlides = [patientImagePrimary, patientImageSecondary];
-  const documentSlides = [
-    reportImage1,
-    reportImage2,
-    reportImage3,
-    reportImage4,
-    reportImage5,
-  ];
+  const documentSlides = [reportImage1, reportImage2, reportImage3, reportImage4, reportImage5];
   const currentPatient = patientSlides[patientSlide % patientSlides.length];
   const currentDocument = documentSlides[documentSlide % documentSlides.length];
 
@@ -62,15 +56,11 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-left">
           <article className="panel hero-image">
-            <img
-              className="hero-image-photo"
-              src={currentPatient}
-              alt="Patient in neonatal care"
-            />
+            <img className="hero-image-photo" src={currentPatient} alt="Patient in neonatal care" />
             <div className="hero-image-caption">
               <strong>Patient in NICU care</strong>
               <p style={{ margin: '6px 0 0' }}>
-                The primary patient image is now loaded from the uploaded images folder.
+                The primary patient image is loaded from the uploaded images folder.
               </p>
             </div>
             <button
@@ -79,7 +69,7 @@ export default function HomePage() {
               onClick={() => movePatient(-1)}
               aria-label="Previous patient image"
             >
-              ‹
+              {'<'}
             </button>
             <button
               className="slider-arrow right"
@@ -87,7 +77,7 @@ export default function HomePage() {
               onClick={() => movePatient(1)}
               aria-label="Next patient image"
             >
-              ›
+              {'>'}
             </button>
           </article>
 
@@ -111,8 +101,7 @@ export default function HomePage() {
               <p className="story-text">{campaign.story}</p>
             ) : (
               <p className="body-copy">
-                No story has been added in Appwrite yet. Add the real fundraiser story to display it
-                here.
+                No story has been added in Appwrite yet. Add the real fundraiser story to display it here.
               </p>
             )}
           </section>
@@ -177,7 +166,10 @@ export default function HomePage() {
                     {campaign.patientContactNumber || 'Contact number not added yet'}
                   </p>
                   {campaign.patientContactNumber ? (
-                    <a className="detail-contact location-button" href={`tel:${campaign.patientContactNumber}`}>
+                    <a
+                      className="detail-contact location-button"
+                      href={`tel:${campaign.patientContactNumber}`}
+                    >
                       Call Patient Contact
                     </a>
                   ) : (
@@ -189,6 +181,7 @@ export default function HomePage() {
           </section>
 
           <UpdateTimeline updates={updates} />
+
           <section className="panel documents-panel">
             <div className="section-heading documents-heading">
               <h2 className="section-title">Documents</h2>
@@ -280,7 +273,10 @@ export default function HomePage() {
               )}
             </div>
             <div className="donor-list-footer">
-              <span>{donationHistory.length} donation{donationHistory.length === 1 ? '' : 's'} recorded in Appwrite</span>
+              <span>
+                {donationHistory.length} donation{donationHistory.length === 1 ? '' : 's'} recorded in
+                Appwrite
+              </span>
             </div>
           </section>
         </aside>
@@ -289,8 +285,8 @@ export default function HomePage() {
       <section className="panel">
         <h2 className="section-title">Funds will be transferred for patient&apos;s treatment</h2>
         <p className="body-copy">
-          The campaign is designed to keep the payment path direct, secure, and transparent. Add
-          the real donation and update records in Appwrite to populate this page.
+          The campaign is designed to keep the payment path direct, secure, and transparent. Add the
+          real donation and update records in Appwrite to populate this page.
         </p>
       </section>
 

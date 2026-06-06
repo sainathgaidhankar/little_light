@@ -33,7 +33,7 @@ ___________________________________________________________________________
 
 कृपया हमारे इस कठिन समय में हमारा साथ दें और इस अभियान को अपने परिवार और दोस्तों के साथ साझा करें।
 
-दिल से आपका धन्यवाद.
+दिल से आपका धन्यवाद।
 
 The goal amount of the campaign may be higher than the attached estimates to address and aid the post-hospitalization expenses/contingencies including but not limited to prolonged medication, diagnostics, rehabilitation therapies, and follow-up doctor visits/consultations which vary from disease to disease.`,
   hospitalName: import.meta.env.VITE_HOSPITAL_NAME || '',

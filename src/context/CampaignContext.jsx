@@ -54,7 +54,7 @@ async function fetchTotals() {
 
   const totals = documents.documents.reduce(
     (acc, item) => {
-      if (item.status !== 'failed') {
+      if (item.status === 'verified' || item.status === 'completed') {
         acc.raised += Number(item.amount || 0);
         acc.donations += 1;
       }
@@ -65,13 +65,17 @@ async function fetchTotals() {
 
   return {
     ok: true,
-    raised: totals.raised,
-    donations: totals.donations,
-    updates: updates.documents,
-    recentDonations: documents.documents.slice(0, 5),
-    donationHistory: documents.documents,
-  };
-}
+      raised: totals.raised,
+      donations: totals.donations,
+      updates: updates.documents,
+      recentDonations: documents.documents
+        .filter((item) => item.status === 'verified' || item.status === 'completed')
+        .slice(0, 5),
+      donationHistory: documents.documents.filter(
+        (item) => item.status === 'verified' || item.status === 'completed'
+      ),
+    };
+  }
 
 const buildDocumentsFromUpdates = (updateRows) => {
   if (!ids.bucketId) return emptyDocuments;

@@ -10,10 +10,11 @@ export default function DonatePage() {
     <div className="page-stack">
       <section className="panel page-intro">
         <span className="eyebrow">Donate</span>
-        <h1>Choose a payment path and support directly.</h1>
+        <h1>Donate in one tap using UPI, PhonePe, Google Pay, or Razorpay.</h1>
         <p className="body-copy">
-          Razorpay handles the secure checkout, while bank transfer gives donors a direct fallback
-          for manual support. All completed payments are logged in Appwrite.
+          Enter your name and amount, then choose the fastest payment method. UPI apps open
+          directly, Razorpay stays available for secure checkout, and bank details remain as a
+          fallback.
         </p>
       </section>
 
