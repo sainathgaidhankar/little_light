@@ -419,6 +419,11 @@ textarea {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
 
+.method-card.active {
+  border-color: rgba(255, 140, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.12);
+}
+
 .method-card strong {
   font-size: 1.02rem;
 }

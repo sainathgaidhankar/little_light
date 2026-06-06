@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { campaignDefaults } from '../lib/campaign';
-import { createDonationExecution, openRazorpayCheckout, openUpiIntent } from '../lib/payment';
+import { createDonationExecution, openRazorpayCheckout } from '../lib/payment';
 
 const quickAmounts = [500, 1000, 2500, 5000];
 
@@ -63,19 +63,6 @@ export default function DonationForm({ onComplete }) {
     });
   };
 
-  const handleUpi = () => {
-    const opened = openUpiIntent({
-      amount: selectedAmount,
-      donorName: form.name,
-      onError: (message) => setStatus(message),
-    });
-
-    if (opened) {
-      setStatus('Opened UPI payment. Complete the payment in your app.');
-      setSubmitting(false);
-    }
-  };
-
   const handleBankTransfer = async () => {
     const result = await submitBankTransfer();
     setStatus('Bank transfer reference saved. Add the UTR later if needed.');
@@ -94,11 +81,6 @@ export default function DonationForm({ onComplete }) {
         throw new Error('Please enter your name and donation amount.');
       }
 
-      if (campaignDefaults.bankUpiId) {
-        handleUpi();
-        return;
-      }
-
       await handleRazorpay();
     } catch (err) {
       setStatus(err?.message || 'Something went wrong.');
@@ -106,13 +88,13 @@ export default function DonationForm({ onComplete }) {
     }
   };
 
-  const submitLabel = campaignDefaults.bankUpiId ? 'Pay with UPI apps' : 'Continue donation';
+  const submitLabel = 'Continue with Razorpay';
 
   return (
     <form className="panel donation-form" onSubmit={handleSubmit}>
       <div className="section-heading">
         <span className="eyebrow">Donate now</span>
-        <h2>One tap to pay with UPI, PhonePe, or Google Pay.</h2>
+        <h2>Pay securely with Razorpay.</h2>
       </div>
 
       <label>
@@ -146,24 +128,9 @@ export default function DonationForm({ onComplete }) {
       </div>
 
       <div className="donation-methods">
-        <button
-          type="button"
-          className="method-card method-primary"
-          onClick={handleUpi}
-          disabled={submitting}
-        >
-          <strong>Pay with UPI apps</strong>
-          <span>Open Google Pay, PhonePe, Paytm, or any UPI app.</span>
-        </button>
-
-        <button
-          type="button"
-          className="method-card"
-          onClick={handleRazorpay}
-          disabled={submitting}
-        >
+        <button type="button" className="method-card method-primary active" disabled={submitting}>
           <strong>Pay with Razorpay</strong>
-          <span>Use card, UPI, or net banking in one secure checkout.</span>
+          <span>Use UPI, PhonePe, Google Pay, card, or net banking in one secure checkout.</span>
         </button>
 
         <button
@@ -173,11 +140,11 @@ export default function DonationForm({ onComplete }) {
           disabled={submitting}
         >
           <strong>Bank transfer</strong>
-          <span>Use direct beneficiary account details if you prefer manual transfer.</span>
+          <span>Use the direct beneficiary account if you prefer manual transfer.</span>
         </button>
       </div>
 
-      <button className="primary-button donation-submit" disabled={submitting}>
+      <button className="primary-button donation-submit" disabled={submitting} type="submit">
         {submitting ? 'Opening payment...' : submitLabel}
       </button>
 

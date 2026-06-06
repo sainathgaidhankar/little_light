@@ -28,11 +28,10 @@ export default function DonatePage() {
     <div className="page-stack">
       <section className="panel page-intro">
         <span className="eyebrow">Donate</span>
-        <h1>Donate in one tap using UPI, PhonePe, Google Pay, or Razorpay.</h1>
+        <h1>Donate securely through Razorpay, with UPI QR as fallback.</h1>
         <p className="body-copy">
-          Enter your name and amount, then choose the fastest payment method. UPI apps open
-          directly, Razorpay stays available for secure checkout, and bank details remain as a
-          fallback.
+          Enter your name and amount. The website uses Razorpay for the actual payment checkout,
+          while QR and UPI ID are shown separately for manual payments if needed.
         </p>
       </section>
 
@@ -43,13 +42,13 @@ export default function DonatePage() {
           <section className="panel">
             <div className="section-heading">
               <span className="eyebrow">Fast pay</span>
-              <h2>Scan QR or copy the UPI ID.</h2>
+              <h2>Scan QR or copy the UPI ID for manual payment.</h2>
             </div>
             <div className="donate-quick-pay">
               <img src={qrImage} alt="Donation QR code" className="donate-qr" />
               <div className="donate-quick-pay-copy">
                 <p className="body-copy">
-                  If the app button does not open, scan this QR in Google Pay, PhonePe, Paytm, or
+                  If you prefer direct UPI payment, scan this QR in Google Pay, PhonePe, Paytm, or
                   any UPI app.
                 </p>
                 <p className="meta-label">UPI ID</p>
