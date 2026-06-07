@@ -44,6 +44,13 @@ export const buildUpiIntentUrl = ({ amount, note }) => {
   return `upi://pay?${params.toString()}`;
 };
 
+export const buildUpiQrUrl = (upiUrl) => {
+  if (!upiUrl) return '';
+  return `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(
+    upiUrl
+  )}`;
+};
+
 export const openUpiIntent = ({ amount, donorName, onError }) => {
   const url = buildUpiIntentUrl({
     amount,
@@ -57,37 +64,4 @@ export const openUpiIntent = ({ amount, donorName, onError }) => {
 
   window.location.href = url;
   return true;
-};
-
-export const openUpiPayment = async ({ donor, amount, onSuccess, onError, onPending }) => {
-  const url = buildUpiIntentUrl({
-    amount,
-    note: donor?.name
-      ? `Donation from ${donor.name}`
-      : `Donation for ${campaignDefaults.beneficiaryName}`,
-  });
-
-  if (!url) {
-    onError?.('UPI ID is not configured.');
-    return;
-  }
-
-  const result = await createDonationExecution({
-    donor,
-    amount,
-    currency: campaignDefaults.currency,
-    paymentMethod: 'upi',
-    gateway: 'upi',
-    transactionRef: `upi-${Date.now()}`,
-    status: 'pending',
-  });
-
-  if (!result.ok) {
-    onError?.(result.message || 'Could not start the donation.');
-    return;
-  }
-
-  onPending?.('Opening your UPI app. Complete the payment there and share the UTR if needed.');
-  window.location.href = url;
-  onSuccess?.(result);
 };

@@ -449,6 +449,111 @@ textarea {
   gap: 18px;
 }
 
+.payment-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.payment-tab {
+  border-radius: 18px;
+  border: 1px solid #d6dbe3;
+  background: #f8fafc;
+  color: var(--navy);
+  text-align: left;
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 4px;
+}
+
+.payment-tab strong {
+  font-size: 0.98rem;
+}
+
+.payment-tab span {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.payment-tab.active {
+  background: rgba(13, 128, 121, 0.08);
+  border-color: rgba(13, 128, 121, 0.22);
+  box-shadow: 0 0 0 3px rgba(13, 128, 121, 0.08);
+}
+
+.payment-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.upi-chooser {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.upi-qr-card {
+  border-radius: 20px;
+  border: 1px solid var(--panel-border);
+  background: #fff;
+  padding: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.upi-qr {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.upi-qr-empty {
+  min-height: 220px;
+  width: 100%;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: #f7f8fb;
+  text-align: center;
+  padding: 20px;
+}
+
+.upi-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.upi-app-chip {
+  border-radius: 999px;
+  border: 1px solid #d6dbe3;
+  background: #fff;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.9rem;
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-hint-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bank-panel {
+  margin: 0;
+}
+
 .modal-app {
   justify-content: center;
   text-align: center;
@@ -493,70 +598,6 @@ textarea {
 
 .donation-submit {
   width: 100%;
-}
-
-.donate-quick-pay {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 16px;
-  align-items: center;
-}
-
-.donate-qr {
-  width: 160px;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid var(--panel-border);
-  background: #fff;
-}
-
-.donate-quick-pay-copy {
-  display: grid;
-  gap: 10px;
-}
-
-.donate-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.fallback-pay-panel {
-  padding: 0;
-  overflow: hidden;
-}
-
-.fallback-pay-summary {
-  list-style: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 1.2rem 1.25rem;
-}
-
-.fallback-pay-summary::-webkit-details-marker {
-  display: none;
-}
-
-.fallback-pay-hint {
-  font-family: system-ui, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--brand);
-  background: rgba(13, 128, 121, 0.08);
-  border-radius: 999px;
-  padding: 0.45rem 0.75rem;
-  white-space: nowrap;
-}
-
-.fallback-pay-content {
-  border-top: 1px solid rgba(20, 31, 48, 0.08);
-  padding: 1.25rem;
-  display: grid;
-  gap: 16px;
 }
 
 .status-message {
@@ -1115,9 +1156,10 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .donate-quick-pay {
+  .payment-tabs,
+  .upi-chooser,
+  .card-hint-grid {
     grid-template-columns: 1fr;
-    justify-items: center;
   }
 
   .donation-panel {

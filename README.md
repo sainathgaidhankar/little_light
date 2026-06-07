@@ -5,8 +5,8 @@ React frontend + Appwrite backend scaffold for a transparent medical donation ca
 ## What is included
 
 - Public pages for `Home`, `Donate`, `Updates`, and `Contact`
-- Donation form with `name`, `email`, `amount`, and payment method selection
-- Razorpay checkout integration with bank-transfer fallback
+- Donation form with `name`, `amount`, and payment mode selection
+- UPI deep link + QR flow with bank-transfer fallback
 - Appwrite-backed totals, updates, and file galleries
 - Admin dashboard for posting updates and uploading hospital documents
 

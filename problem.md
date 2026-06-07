@@ -49,7 +49,7 @@ VITE_BANK_ACCOUNT_NAME=STATE BANK OF INDIA
 VITE_BANK_ACCOUNT_NUMBER=20147810747
 VITE_BANK_IFSC=SBIN0001861
 VITE_BANK_UPI_ID=shehbaazansari336@oksbi
-VITE_RAZORPAY_KEY_ID=rzp_test_SyK41el1Dju9hx
+VITE_RAZORPAY_KEY_ID=
 VITE_RAZORPAY_LOGO_URL=
 ```
 
@@ -61,19 +61,17 @@ File: [src/components/DonationForm.jsx](./src/components/DonationForm.jsx)
   - name
   - amount
 - Clicks `Donate now`
-- The app calls Appwrite function `create-donation`
-- The function is expected to:
-  1. create a Razorpay order when `action === 'create-order'`
-  2. verify the payment after Razorpay success
-  3. save the donation in Appwrite
+- The app opens a payment chooser modal
+- The function is used to:
+  1. record the donation as `pending`
+  2. store the donor, amount, payment method, and status in Appwrite
+  3. let the donor continue through UPI or bank transfer
 
 ## Current Backend Function Logic
 
-File: [appwrite/functions/create-donation/index.js](./appwrite/functions/create-donation/index.js)
+File: [appwrite/functions/create-donation/src/main.js](./appwrite/functions/create-donation/src/main.js)
 
-The function currently does both:
-- order creation via Razorpay API when `body.action === 'create-order'`
-- donation verification/storage when payment data is sent back
+The function currently writes donation records to Appwrite with `pending` status.
 
 ## Verified Facts From Screenshots
 - `create-donation` exists.
@@ -90,10 +88,7 @@ The function currently does both:
 - The local repository now contains:
   - `appwrite/functions/create-donation/src/main.js`
   - `appwrite/functions/get-totals/src/main.js`
-- The local `src/main.js` files currently contain:
-```js
-export { default } from '../index.js';
-```
+- The local `src/main.js` files now contain the real function code.
 - Appwrite is still failing until the deployment is updated to include those files or the function entrypoint is changed to a file that exists in the deployed package.
 
 ## Important Code Paths To Inspect
@@ -136,4 +131,4 @@ VITE_APPWRITE_PROJECT_ID=6a23e8b600393c746741
 - The deployed function package should include the `src/main.js` entrypoint Appwrite is trying to load.
 
 ## Notes For Another AI
-Please focus on the reason the browser request to Appwrite is failing before the function execution is created. Do not assume the payment gateway is the primary issue unless the function call itself is confirmed working.
+Please focus on the payment-mode flow and the Appwrite function deployment if the payment chooser or UPI handoff fails. Do not assume Razorpay is involved; it has been removed from the current build.

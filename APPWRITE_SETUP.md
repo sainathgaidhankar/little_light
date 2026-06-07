@@ -219,5 +219,5 @@ Important:
 Use this rule:
 
 - `bank_transfer` stays `pending` until admin verifies it
-- `razorpay` is marked `verified` after gateway verification
+- `upi` is marked `verified` after the payment is confirmed by proof or bank reference
 - public totals sum only verified donations
