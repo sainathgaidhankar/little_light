@@ -87,6 +87,41 @@ textarea {
   border-top: 0;
 }
 
+.burger-button {
+  display: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  border: 1px solid #d5d9e0;
+  background: #fff;
+  padding: 0.6rem;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-direction: column;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.burger-button span {
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--navy);
+  transition: transform 180ms ease, opacity 180ms ease, width 180ms ease;
+}
+
+.burger-button.active span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.burger-button.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-button.active span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
 .brand-mark {
   display: inline-block;
   font-size: 1.15rem;
@@ -170,6 +205,8 @@ textarea {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  min-width: 0;
+  transition: opacity 180ms ease, transform 180ms ease, max-height 180ms ease;
 }
 
 .nav-link,
@@ -762,6 +799,66 @@ textarea {
   text-align: right;
 }
 
+.gallery-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(14, 18, 28, 0.76);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  animation: overlay-fade-in 180ms ease-out;
+}
+
+.gallery-modal {
+  width: min(920px, 100%);
+  border-radius: 28px;
+  background: #fff;
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+  animation: modal-rise 220ms ease-out;
+}
+
+.gallery-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.gallery-modal-title {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.gallery-modal-view {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #0f172a;
+  min-height: min(68vh, 720px);
+  display: grid;
+  place-items: center;
+}
+
+.gallery-modal-image {
+  width: 100%;
+  height: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  background: #0f172a;
+}
+
+.gallery-modal-close-hit {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: transparent;
+}
+
 .checkbox-row {
   display: flex !important;
   grid-template-columns: none !important;
@@ -811,6 +908,7 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: zoom-in;
 }
 
 .slider-arrow {
@@ -827,6 +925,7 @@ textarea {
   display: grid;
   place-items: center;
   box-shadow: var(--shadow);
+  z-index: 3;
 }
 
 .slider-arrow.left {
@@ -848,6 +947,15 @@ textarea {
   font-size: 0.95rem;
   color: var(--text);
   box-shadow: var(--shadow);
+  z-index: 2;
+}
+
+.image-open-hit {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  z-index: 1;
 }
 
 .gallery-strip {
@@ -873,6 +981,7 @@ textarea {
   border-radius: 14px;
   border: 2px solid #57a36b;
   object-fit: cover;
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .thumb.alt {
@@ -992,6 +1101,7 @@ textarea {
   width: 100%;
   height: 460px;
   object-fit: cover;
+  cursor: zoom-in;
 }
 
 .document-preview figcaption {
@@ -1024,6 +1134,7 @@ textarea {
   width: 100%;
   height: 88px;
   object-fit: cover;
+  transition: transform 180ms ease;
 }
 
 .report-card {
@@ -1216,7 +1327,6 @@ textarea {
 }
 
 @media (max-width: 960px) {
-  .site-header,
   .hero,
   .two-column-layout,
   .site-footer {
@@ -1225,7 +1335,29 @@ textarea {
   }
 
   .site-header {
-    position: static;
+    position: sticky;
+    top: 0;
+    grid-template-columns: 1fr auto;
+    grid-auto-rows: auto;
+    align-items: start;
+    gap: 10px 12px;
+    border-radius: 0 0 18px 18px;
+  }
+
+  .brand-block {
+    grid-column: 1 / -1;
+  }
+
+  .burger-button {
+    display: inline-flex;
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .header-actions {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .campaign-kpis {
@@ -1287,6 +1419,24 @@ textarea {
     position: static;
   }
 
+  .site-nav {
+    display: none;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    padding-top: 4px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  .site-nav.open {
+    display: flex;
+    max-height: 260px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .bottom-bar-inner {
     grid-template-columns: 1fr;
   }
@@ -1299,6 +1449,18 @@ textarea {
   .footer-note-block {
     justify-items: start;
     text-align: left;
+  }
+
+  .gallery-modal {
+    width: 100%;
+  }
+
+  .gallery-modal-view {
+    min-height: 54vh;
+  }
+
+  .gallery-modal-image {
+    max-height: 54vh;
   }
 }
 
@@ -1444,6 +1606,23 @@ textarea {
   .payment-tab,
   .method-card {
     border-radius: 16px;
+  }
+
+  .gallery-modal {
+    padding: 12px;
+    border-radius: 22px;
+  }
+
+  .gallery-modal-head {
+    align-items: flex-start;
+  }
+
+  .gallery-modal-view {
+    min-height: 48vh;
+  }
+
+  .gallery-modal-image {
+    max-height: 48vh;
   }
 }
 

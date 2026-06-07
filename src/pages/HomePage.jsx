@@ -28,6 +28,7 @@ export default function HomePage() {
   const { campaign, updates, donationHistory, loading, error } = useCampaign();
   const [patientSlide, setPatientSlide] = useState(0);
   const [documentSlide, setDocumentSlide] = useState(0);
+  const [viewer, setViewer] = useState(null);
 
   const hasStory = Boolean(campaign.story);
   const patientSlides = [patientImagePrimary, patientImageSecondary];
@@ -41,6 +42,22 @@ export default function HomePage() {
 
   const movePatient = stepSlide(setPatientSlide, patientSlides.length);
   const moveDocument = stepSlide(setDocumentSlide, documentSlides.length);
+  const openViewer = (type, index) => setViewer({ type, index });
+  const closeViewer = () => setViewer(null);
+  const viewerSlides = viewer?.type === 'document' ? documentSlides : patientSlides;
+  const viewerIndex = viewer?.index ?? 0;
+  const viewerSrc = viewerSlides[viewerIndex % viewerSlides.length];
+  const viewerTitle =
+    viewer?.type === 'document'
+      ? `Document ${viewerIndex + 1} of ${documentSlides.length}`
+      : `Patient image ${viewerIndex + 1} of ${patientSlides.length}`;
+  const jumpViewer = (direction) => {
+    if (!viewer) return;
+    setViewer((current) => ({
+      ...current,
+      index: (current.index + direction + viewerSlides.length) % viewerSlides.length,
+    }));
+  };
 
   return (
     <div className="page-stack">
@@ -63,6 +80,12 @@ export default function HomePage() {
                 The primary patient image is loaded from the uploaded images folder.
               </p>
             </div>
+            <button
+              type="button"
+              className="image-open-hit"
+              aria-label="Open patient image"
+              onClick={() => openViewer('patient', patientSlide)}
+            />
             <button
               className="slider-arrow left"
               type="button"
@@ -87,7 +110,10 @@ export default function HomePage() {
                 key={src}
                 type="button"
                 className={`thumb-button ${patientSlide === index ? 'active' : ''}`}
-                onClick={() => setPatientSlide(index)}
+                onClick={() => {
+                  setPatientSlide(index);
+                  openViewer('patient', index);
+                }}
                 aria-label={`Show patient image ${index + 1}`}
               >
                 <img className="thumb" src={src} alt={`Patient thumbnail ${index + 1}`} />
@@ -207,7 +233,10 @@ export default function HomePage() {
                     key={src}
                     type="button"
                     className={`document-thumb ${documentSlide === index ? 'active' : ''}`}
-                    onClick={() => setDocumentSlide(index)}
+                    onClick={() => {
+                      setDocumentSlide(index);
+                      openViewer('document', index);
+                    }}
                     aria-label={`Show document ${index + 1}`}
                   >
                     <img src={src} alt={`Document thumbnail ${index + 1}`} />
@@ -292,6 +321,44 @@ export default function HomePage() {
 
       {loading ? <p className="status-message">Loading campaign data...</p> : null}
       {error ? <p className="status-message error">{error}</p> : null}
+
+      {viewer ? (
+        <div
+          className="gallery-modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label={viewerTitle}
+          onClick={closeViewer}
+        >
+          <div className="gallery-modal" onClick={(event) => event.stopPropagation()}>
+            <div className="gallery-modal-head">
+              <span className="gallery-modal-title">{viewerTitle}</span>
+              <button type="button" className="ghost-button small" onClick={closeViewer}>
+                Close
+              </button>
+            </div>
+            <div className="gallery-modal-view">
+              <button
+                type="button"
+                className="slider-arrow left"
+                onClick={() => jumpViewer(-1)}
+                aria-label="Previous image"
+              >
+                {'<'}
+              </button>
+              <img src={viewerSrc} alt={viewerTitle} className="gallery-modal-image" />
+              <button
+                type="button"
+                className="slider-arrow right"
+                onClick={() => jumpViewer(1)}
+                aria-label="Next image"
+                >
+                  {'>'}
+                </button>
+              </div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="bottom-bar">
         <div className="bottom-bar-inner">

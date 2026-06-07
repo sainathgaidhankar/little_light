@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCampaign } from '../context/CampaignContext';
@@ -12,6 +13,7 @@ const navItems = [
 export default function Layout({ children }) {
   const { user, logout, isAdmin } = useAuth();
   const { campaign } = useCampaign();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const donorCount = Number(campaign?.donations || 0);
   const daysLeft = Number.isFinite(Number(campaign?.daysLeft)) ? Number(campaign.daysLeft) : 0;
@@ -45,17 +47,30 @@ export default function Layout({ children }) {
           </div>
         </div>
 
-        <nav className="site-nav" aria-label="Primary">
+        <button
+          className={`burger-button ${menuOpen ? 'active' : ''}`}
+          type="button"
+          onClick={() => setMenuOpen((current) => !current)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav className={`site-nav ${menuOpen ? 'open' : ''}`} aria-label="Primary">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={() => setMenuOpen(false)}
             >
               {item.label}
             </NavLink>
           ))}
-          <NavLink to="/admin" className="nav-link nav-link-admin">
+          <NavLink to="/admin" className="nav-link nav-link-admin" onClick={() => setMenuOpen(false)}>
             Admin
           </NavLink>
         </nav>
@@ -69,7 +84,7 @@ export default function Layout({ children }) {
               </button>
             </>
           ) : (
-            <Link className="ghost-button" to="/admin">
+            <Link className="ghost-button" to="/admin" onClick={() => setMenuOpen(false)}>
               Admin login
             </Link>
           )}
