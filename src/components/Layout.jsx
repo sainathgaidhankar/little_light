@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCampaign } from '../context/CampaignContext';
 
@@ -13,7 +13,12 @@ const navItems = [
 export default function Layout({ children }) {
   const { user, logout, isAdmin } = useAuth();
   const { campaign } = useCampaign();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   const donorCount = Number(campaign?.donations || 0);
   const daysSincePosted = Number.isFinite(Number(campaign?.daysSincePosted))
