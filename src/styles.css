@@ -94,6 +94,60 @@ textarea {
   letter-spacing: 0.02em;
 }
 
+.brand-block {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand-badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(23, 160, 108, 0.12);
+  color: #126b47;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.campaign-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.kpi-chip {
+  border-radius: 16px;
+  border: 1px solid #e4e8ef;
+  background: linear-gradient(180deg, #fff, #f8fafc);
+  padding: 10px 12px;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.kpi-chip span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-chip strong {
+  color: var(--navy);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
 .brand-mark-with-logo {
   display: inline-flex;
   align-items: center;
@@ -701,6 +755,13 @@ textarea {
   color: var(--muted);
 }
 
+.footer-note-block {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  text-align: right;
+}
+
 .checkbox-row {
   display: flex !important;
   grid-template-columns: none !important;
@@ -1167,6 +1228,10 @@ textarea {
     position: static;
   }
 
+  .campaign-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .hero-stats,
   .detail-grid,
   .progress-meta,
@@ -1230,6 +1295,11 @@ textarea {
     text-align: left;
     font-size: 1.3rem;
   }
+
+  .footer-note-block {
+    justify-items: start;
+    text-align: left;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1248,6 +1318,23 @@ textarea {
   .header-actions,
   .hero-actions {
     width: 100%;
+  }
+
+  .site-nav {
+    gap: 8px;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .campaign-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-chip {
+    padding: 12px 14px;
   }
 
   .payment-modal {

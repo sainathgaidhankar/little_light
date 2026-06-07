@@ -4,6 +4,7 @@ import {
   campaignDefaults,
   emptyDocuments,
   emptyUpdates,
+  daysRemaining,
   formatCurrency,
 } from '../lib/campaign';
 
@@ -98,6 +99,7 @@ export function CampaignProvider({ children }) {
     raised: 0,
     donations: 0,
     progress: 0,
+    daysLeft: daysRemaining(campaignDefaults.campaignEndDate, 30),
   });
   const [updates, setUpdates] = useState(emptyUpdates);
   const [documents, setDocuments] = useState(emptyDocuments);
@@ -115,12 +117,14 @@ export function CampaignProvider({ children }) {
         100,
         Math.round((raised / Number(campaignDefaults.targetAmount || 1)) * 100)
       );
+      const daysLeft = daysRemaining(campaignDefaults.campaignEndDate, 30);
 
       setCampaign({
         ...campaignDefaults,
         raised,
         donations: Number(data.donations || 0),
         progress,
+        daysLeft,
       });
       const visibleUpdates = data.updates?.length ? data.updates : emptyUpdates;
       setUpdates(visibleUpdates);
@@ -129,7 +133,11 @@ export function CampaignProvider({ children }) {
       setDocuments(buildDocumentsFromUpdates(visibleUpdates));
     } catch (err) {
       setError(err?.message || 'Failed to load campaign data.');
-      setCampaign((current) => ({ ...current, progress: current.progress || 0 }));
+      setCampaign((current) => ({
+        ...current,
+        progress: current.progress || 0,
+        daysLeft: current.daysLeft ?? daysRemaining(campaignDefaults.campaignEndDate, 30),
+      }));
     } finally {
       setLoading(false);
     }

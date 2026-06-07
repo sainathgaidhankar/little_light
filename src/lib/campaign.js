@@ -3,6 +3,7 @@ export const campaignDefaults = {
   beneficiaryName: import.meta.env.VITE_CAMPAIGN_BENEFICIARY_NAME || '',
   targetAmount: Number(import.meta.env.VITE_CAMPAIGN_TARGET_AMOUNT || 0),
   currency: import.meta.env.VITE_CAMPAIGN_CURRENCY || 'INR',
+  campaignEndDate: import.meta.env.VITE_CAMPAIGN_END_DATE || '',
   story:
     import.meta.env.VITE_CAMPAIGN_STORY ||
     `My name is Shehbaaz Imam Sahab, and I am reaching out to seek support for our newborn baby, who is fighting for his life in the NICU at Medicover Woman and Child Hospital, Hyderabad.
@@ -63,6 +64,16 @@ export const formatCurrency = (value, currency = campaignDefaults.currency) =>
 
 export const percentRaised = (raised, target = campaignDefaults.targetAmount) =>
   Math.min(100, Math.round((Number(raised || 0) / Number(target || 1)) * 100));
+
+export const daysRemaining = (endDate, fallbackDays = 30) => {
+  if (!endDate) return fallbackDays;
+
+  const end = new Date(endDate);
+  if (Number.isNaN(end.getTime())) return fallbackDays;
+
+  const diff = end.getTime() - Date.now();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+};
 
 export const emptyUpdates = [];
 export const emptyDocuments = [];
