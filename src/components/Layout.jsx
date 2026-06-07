@@ -61,35 +61,37 @@ export default function Layout({ children }) {
           <span />
         </button>
 
-        <nav className={`site-nav ${menuOpen ? 'open' : ''}`} aria-label="Primary">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
+        <div className={`header-drawer ${menuOpen ? 'open' : ''}`}>
+          <nav className="site-nav" aria-label="Primary">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <NavLink to="/admin" className="nav-link nav-link-admin" onClick={() => setMenuOpen(false)}>
+              Admin
             </NavLink>
-          ))}
-          <NavLink to="/admin" className="nav-link nav-link-admin" onClick={() => setMenuOpen(false)}>
-            Admin
-          </NavLink>
-        </nav>
+          </nav>
 
-        <div className="header-actions">
-          {user ? (
-            <>
-              <span className="session-pill">{isAdmin ? 'Admin' : 'Signed in'}</span>
-              <button className="ghost-button" onClick={logout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link className="ghost-button" to="/admin" onClick={() => setMenuOpen(false)}>
-              Admin login
-            </Link>
-          )}
+          <div className="header-actions">
+            {user ? (
+              <>
+                <span className="session-pill">{isAdmin ? 'Admin' : 'Signed in'}</span>
+                <button className="ghost-button" onClick={logout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link className="ghost-button" to="/admin" onClick={() => setMenuOpen(false)}>
+                Admin login
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 

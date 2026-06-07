@@ -73,7 +73,14 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-left">
           <article className="panel hero-image">
-            <img className="hero-image-photo" src={currentPatient} alt="Patient in neonatal care" />
+            <img
+              className="hero-image-photo"
+              src={currentPatient}
+              alt="Patient in neonatal care"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
             <div className="hero-image-caption">
               <strong>Patient in NICU care</strong>
               <p style={{ margin: '6px 0 0' }}>
@@ -116,7 +123,7 @@ export default function HomePage() {
                 }}
                 aria-label={`Show patient image ${index + 1}`}
               >
-                <img className="thumb" src={src} alt={`Patient thumbnail ${index + 1}`} />
+                <img className="thumb" src={src} alt={`Patient thumbnail ${index + 1}`} loading="lazy" decoding="async" />
               </button>
             ))}
           </div>
@@ -222,7 +229,12 @@ export default function HomePage() {
             </div>
             <div className="documents-slider">
               <figure className="document-preview">
-                <img src={currentDocument} alt={`Document ${documentSlide + 1}`} />
+                <img
+                  src={currentDocument}
+                  alt={`Document ${documentSlide + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <figcaption>
                   Document {documentSlide + 1} of {documentSlides.length}
                 </figcaption>
@@ -239,7 +251,7 @@ export default function HomePage() {
                     }}
                     aria-label={`Show document ${index + 1}`}
                   >
-                    <img src={src} alt={`Document thumbnail ${index + 1}`} />
+                    <img src={src} alt={`Document thumbnail ${index + 1}`} loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
@@ -263,7 +275,7 @@ export default function HomePage() {
                 Donate via Paytm/Google Pay/PhonePe
               </h3>
               <div className="qr-card">
-                <img src={qrImage} alt="Donation QR code" />
+                <img src={qrImage} alt="Donation QR code" loading="lazy" decoding="async" />
                 <p className="donation-quick-note">
                   Scan the QR code to donate directly through UPI.
                 </p>
