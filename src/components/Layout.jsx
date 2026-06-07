@@ -16,7 +16,9 @@ export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const donorCount = Number(campaign?.donations || 0);
-  const daysLeft = Number.isFinite(Number(campaign?.daysLeft)) ? Number(campaign.daysLeft) : 0;
+  const daysSincePosted = Number.isFinite(Number(campaign?.daysSincePosted))
+    ? Number(campaign.daysSincePosted)
+    : 0;
 
   return (
     <div className="app-shell">
@@ -37,8 +39,8 @@ export default function Layout({ children }) {
               <strong>{donorCount.toLocaleString('en-IN')}</strong>
             </div>
             <div className="kpi-chip">
-              <span>Days left</span>
-              <strong>{daysLeft > 0 ? daysLeft : 'Live now'}</strong>
+              <span>Days since posted</span>
+              <strong>{daysSincePosted}</strong>
             </div>
             <div className="kpi-chip">
               <span>Status</span>

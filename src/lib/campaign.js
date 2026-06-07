@@ -3,6 +3,7 @@ export const campaignDefaults = {
   beneficiaryName: import.meta.env.VITE_CAMPAIGN_BENEFICIARY_NAME || '',
   targetAmount: Number(import.meta.env.VITE_CAMPAIGN_TARGET_AMOUNT || 0),
   currency: import.meta.env.VITE_CAMPAIGN_CURRENCY || 'INR',
+  campaignPostedDate: import.meta.env.VITE_CAMPAIGN_POSTED_DATE || '',
   campaignEndDate: import.meta.env.VITE_CAMPAIGN_END_DATE || '',
   story:
     import.meta.env.VITE_CAMPAIGN_STORY ||
@@ -72,6 +73,16 @@ export const daysRemaining = (endDate, fallbackDays = 30) => {
   if (Number.isNaN(end.getTime())) return fallbackDays;
 
   const diff = end.getTime() - Date.now();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+};
+
+export const daysSincePosted = (postedDate, fallbackDays = 0) => {
+  if (!postedDate) return fallbackDays;
+
+  const posted = new Date(postedDate);
+  if (Number.isNaN(posted.getTime())) return fallbackDays;
+
+  const diff = Date.now() - posted.getTime();
   return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
 };
 

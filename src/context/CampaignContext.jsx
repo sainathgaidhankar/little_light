@@ -4,7 +4,7 @@ import {
   campaignDefaults,
   emptyDocuments,
   emptyUpdates,
-  daysRemaining,
+  daysSincePosted,
   formatCurrency,
 } from '../lib/campaign';
 
@@ -66,17 +66,17 @@ async function fetchTotals() {
 
   return {
     ok: true,
-      raised: totals.raised,
-      donations: totals.donations,
-      updates: updates.documents,
-      recentDonations: documents.documents
-        .filter((item) => item.status === 'verified' || item.status === 'completed')
-        .slice(0, 5),
-      donationHistory: documents.documents.filter(
-        (item) => item.status === 'verified' || item.status === 'completed'
-      ),
-    };
-  }
+    raised: totals.raised,
+    donations: totals.donations,
+    updates: updates.documents,
+    recentDonations: documents.documents
+      .filter((item) => item.status === 'verified' || item.status === 'completed')
+      .slice(0, 5),
+    donationHistory: documents.documents.filter(
+      (item) => item.status === 'verified' || item.status === 'completed'
+    ),
+  };
+}
 
 const buildDocumentsFromUpdates = (updateRows) => {
   if (!ids.bucketId) return emptyDocuments;
@@ -99,7 +99,7 @@ export function CampaignProvider({ children }) {
     raised: 0,
     donations: 0,
     progress: 0,
-    daysLeft: daysRemaining(campaignDefaults.campaignEndDate, 30),
+    daysSincePosted: daysSincePosted(campaignDefaults.campaignPostedDate, 0),
   });
   const [updates, setUpdates] = useState(emptyUpdates);
   const [documents, setDocuments] = useState(emptyDocuments);
@@ -117,14 +117,14 @@ export function CampaignProvider({ children }) {
         100,
         Math.round((raised / Number(campaignDefaults.targetAmount || 1)) * 100)
       );
-      const daysLeft = daysRemaining(campaignDefaults.campaignEndDate, 30);
+      const daysSincePostedCount = daysSincePosted(campaignDefaults.campaignPostedDate, 0);
 
       setCampaign({
         ...campaignDefaults,
         raised,
         donations: Number(data.donations || 0),
         progress,
-        daysLeft,
+        daysSincePosted: daysSincePostedCount,
       });
       const visibleUpdates = data.updates?.length ? data.updates : emptyUpdates;
       setUpdates(visibleUpdates);
@@ -136,7 +136,8 @@ export function CampaignProvider({ children }) {
       setCampaign((current) => ({
         ...current,
         progress: current.progress || 0,
-        daysLeft: current.daysLeft ?? daysRemaining(campaignDefaults.campaignEndDate, 30),
+        daysSincePosted:
+          current.daysSincePosted ?? daysSincePosted(campaignDefaults.campaignPostedDate, 0),
       }));
     } finally {
       setLoading(false);

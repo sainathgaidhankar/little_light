@@ -4,7 +4,7 @@ export default function ProgressBar({ raised, target = campaignDefaults.targetAm
   const progress = percentRaised(raised, target);
 
   return (
-    <section className="panel progress-panel">
+    <section className="progress-panel">
       <div className="section-heading">
         <span className="eyebrow">Fund progress</span>
         <h2>Every contribution brings the treatment closer to completion.</h2>
@@ -25,8 +25,14 @@ export default function ProgressBar({ raised, target = campaignDefaults.targetAm
         </div>
       </div>
 
-      <div className="progress-track" aria-label={`Raised ${progress} percent of target`}>
-        <div className="progress-fill" style={{ width: `${progress}%` }} />
+      <div className="progress-meter" aria-label={`Raised ${progress} percent of target`}>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+        <div className="progress-caption">
+          <span>{progress}% funded</span>
+          <strong>{formatCurrency(raised)} raised</strong>
+        </div>
       </div>
     </section>
   );
