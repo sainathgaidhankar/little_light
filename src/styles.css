@@ -1860,3 +1860,254 @@ textarea {
     transform: translateY(0) scale(1);
   }
 }
+
+/* Mobile-first containment overrides */
+.page-stack,
+.panel,
+.page-intro,
+.hero,
+.two-column-layout,
+.stack-column,
+.story-panel,
+.donation-panel,
+.documents-panel,
+.timeline-card,
+.detail-card,
+.subtle-card,
+.bank-panel,
+.progress-panel,
+.document-preview,
+.recent-item,
+.document-card,
+.donor-row,
+.contact-grid,
+.bank-grid,
+.detail-grid,
+.hero-stats,
+.progress-meta,
+.timeline,
+.document-grid,
+.recent-list {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.page-stack,
+.hero,
+.two-column-layout,
+.stack-column,
+.contact-grid,
+.bank-grid,
+.detail-grid,
+.hero-stats,
+.progress-meta,
+.timeline,
+.document-grid,
+.recent-list {
+  box-sizing: border-box;
+}
+
+.page-intro,
+.story-panel,
+.documents-panel,
+.timeline-card,
+.detail-card,
+.donation-panel,
+.subtle-card,
+.bank-panel,
+.progress-panel,
+.recent-item,
+.document-card,
+.donor-row {
+  overflow: hidden;
+}
+
+.page-intro h1,
+.section-heading h2,
+.hero-copy h1,
+.story-panel h2,
+.page-intro p,
+.story-text,
+.body-copy,
+.timeline-card p,
+.detail-meta,
+.donation-quick-note,
+.bank-grid strong,
+.bank-upi-row strong,
+.nav-brand span,
+.nav-stat strong,
+.nav-link,
+.ghost-button,
+.primary-button {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.page-intro,
+.story-panel,
+.documents-panel,
+.timeline-card,
+.detail-card,
+.bank-panel,
+.progress-panel,
+.subtle-card,
+.donation-panel {
+  padding-inline: clamp(14px, 3.5vw, 22px);
+}
+
+.hero-image-photo,
+.document-preview img,
+.document-thumb img,
+.thumb,
+.qr-card img,
+.gallery-modal-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.donation-submit,
+.cta-stack .primary-button,
+.bottom-bar .primary-button,
+.nav-actions .ghost-button,
+.nav-actions .session-pill {
+  width: 100%;
+}
+
+.donation-submit {
+  min-height: 56px;
+}
+
+.page-intro h1,
+.section-heading h2,
+.hero-copy h1 {
+  font-size: clamp(1.5rem, 4.5vw, 2.8rem);
+  line-height: 1.15;
+}
+
+.section-title {
+  font-size: clamp(1.15rem, 3.8vw, 1.7rem);
+}
+
+.body-copy,
+.story-text,
+.page-intro p,
+.timeline-card p,
+.detail-meta,
+.donation-quick-note {
+  font-size: clamp(0.94rem, 2.8vw, 1rem);
+  line-height: 1.72;
+}
+
+.payment-tab,
+.method-card {
+  min-height: 84px;
+}
+
+@media (max-width: 768px) {
+  .hero,
+  .two-column-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .page-stack {
+    gap: 16px;
+    margin-top: 14px;
+    padding-bottom: 88px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .page-intro,
+  .story-panel,
+  .documents-panel,
+  .timeline-card,
+  .detail-card,
+  .bank-panel,
+  .progress-panel,
+  .subtle-card,
+  .donation-panel {
+    padding: 14px;
+  }
+
+  .hero-image {
+    min-height: 280px;
+  }
+
+  .hero-image-caption {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+    padding: 10px 12px;
+  }
+
+  .gallery-strip {
+    gap: 8px;
+  }
+
+  .thumb {
+    width: 72px;
+    height: 72px;
+  }
+
+  .document-thumbs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .document-preview img {
+    height: auto;
+    max-height: 340px;
+  }
+
+  .detail-grid,
+  .bank-grid,
+  .contact-grid,
+  .hero-stats,
+  .progress-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .document-card,
+  .recent-item,
+  .donor-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .payment-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-tab,
+  .method-card {
+    min-height: 74px;
+    padding: 14px 16px;
+  }
+
+  .upi-chooser {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-actions {
+    flex-direction: column;
+  }
+
+  .payment-actions .primary-button,
+  .payment-actions .ghost-button {
+    width: 100%;
+  }
+
+  .bottom-bar-inner {
+    width: 100%;
+    padding-inline: 14px;
+  }
+
+  .bottom-bar-title {
+    font-size: 1.15rem;
+    text-align: left;
+  }
+}
