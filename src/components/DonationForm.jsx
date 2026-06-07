@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BankDetails from '../components/BankDetails';
 import { campaignDefaults } from '../lib/campaign';
 import {
@@ -42,6 +42,15 @@ export default function DonationForm({ onComplete }) {
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState('upi');
   const [copyStatus, setCopyStatus] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   const selectedAmount = useMemo(() => Number(form.amount || 0), [form.amount]);
 
@@ -238,18 +247,11 @@ export default function DonationForm({ onComplete }) {
             {activeTab === 'upi' ? (
               <div className="payment-panel">
                 <div className="upi-chooser">
-                  <div className="upi-qr-card">
-                    {qrUrl ? (
-                      <img className="upi-qr" src={qrUrl} alt="UPI payment QR code" />
-                    ) : (
-                      <div className="upi-qr-empty">Set a UPI ID to generate QR</div>
-                    )}
-                  </div>
-
                   <div className="upi-copy">
                     <p className="body-copy">
-                      Click the button below on mobile to open the installed UPI app. On desktop,
-                      scan the QR code with your UPI app.
+                      {isMobile
+                        ? 'Tap to open your installed UPI app directly. If the app does not open, copy the UPI ID and use it in your app.'
+                        : 'Scan the QR code with your UPI app or copy the UPI ID if needed.'}
                     </p>
                     <p className="meta-label">UPI ID</p>
                     <strong>{campaignDefaults.bankUpiId || 'Add in Appwrite'}</strong>
@@ -267,13 +269,21 @@ export default function DonationForm({ onComplete }) {
                         onClick={handleUpiPay}
                         disabled={submitting || !upiUrl}
                       >
-                        Open UPI app
+                        {isMobile ? 'Open UPI app' : 'Open UPI app'}
                       </button>
                       <button type="button" className="ghost-button" onClick={copyUpi}>
                         Copy UPI ID
                       </button>
                     </div>
                     {copyStatus ? <p className="status-message">{copyStatus}</p> : null}
+                  </div>
+
+                  <div className="upi-qr-card">
+                    {qrUrl ? (
+                      <img className="upi-qr" src={qrUrl} alt="UPI payment QR code" />
+                    ) : (
+                      <div className="upi-qr-empty">Set a UPI ID to generate QR</div>
+                    )}
                   </div>
                 </div>
               </div>

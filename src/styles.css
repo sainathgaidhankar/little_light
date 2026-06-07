@@ -436,6 +436,7 @@ textarea {
   place-items: center;
   z-index: 100;
   padding: 18px;
+  animation: overlay-fade-in 180ms ease-out;
 }
 
 .payment-modal {
@@ -447,6 +448,7 @@ textarea {
   padding: 20px;
   display: grid;
   gap: 18px;
+  animation: modal-rise 220ms ease-out;
 }
 
 .payment-tabs {
@@ -464,6 +466,8 @@ textarea {
   padding: 0.9rem 1rem;
   display: grid;
   gap: 4px;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease,
+    background-color 180ms ease;
 }
 
 .payment-tab strong {
@@ -482,6 +486,19 @@ textarea {
   box-shadow: 0 0 0 3px rgba(13, 128, 121, 0.08);
 }
 
+.payment-tab:hover,
+.payment-tab:focus-visible,
+.method-card:hover,
+.method-card:focus-visible,
+.upi-app-chip:hover,
+.upi-app-chip:focus-visible,
+.quick-amount:hover,
+.quick-amount:focus-visible,
+.primary-button:hover,
+.ghost-button:hover {
+  transform: translateY(-1px);
+}
+
 .payment-panel {
   display: grid;
   gap: 16px;
@@ -495,6 +512,7 @@ textarea {
 }
 
 .upi-qr-card {
+  order: 1;
   border-radius: 20px;
   border: 1px solid var(--panel-border);
   background: #fff;
@@ -524,6 +542,7 @@ textarea {
 }
 
 .upi-copy {
+  order: 2;
   display: grid;
   gap: 10px;
 }
@@ -536,6 +555,7 @@ textarea {
   font-size: 0.9rem;
   color: var(--navy);
   font-weight: 600;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .payment-actions {
@@ -574,6 +594,8 @@ textarea {
   padding: 14px 16px;
   color: var(--text);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease,
+    background-color 180ms ease;
 }
 
 .method-card.active {
@@ -598,6 +620,11 @@ textarea {
 
 .donation-submit {
   width: 100%;
+}
+
+.payment-actions .primary-button,
+.payment-actions .ghost-button {
+  flex: 1 1 220px;
 }
 
 .status-message {
@@ -1152,6 +1179,19 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .payment-modal {
+    width: 100%;
+    max-height: min(92vh, 900px);
+    overflow: auto;
+    border-radius: 24px 24px 20px 20px;
+    align-self: end;
+  }
+
+  .payment-modal-backdrop {
+    padding: 0;
+    place-items: end center;
+  }
+
   .upi-app-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1160,6 +1200,22 @@ textarea {
   .upi-chooser,
   .card-hint-grid {
     grid-template-columns: 1fr;
+  }
+
+  .upi-copy {
+    order: 1;
+  }
+
+  .upi-qr-card {
+    order: 2;
+  }
+
+  .upi-qr-card {
+    width: 100%;
+  }
+
+  .payment-actions {
+    flex-direction: column;
   }
 
   .donation-panel {
@@ -1192,5 +1248,34 @@ textarea {
   .header-actions,
   .hero-actions {
     width: 100%;
+  }
+
+  .payment-modal {
+    padding: 16px;
+  }
+
+  .payment-tab,
+  .method-card {
+    border-radius: 16px;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
