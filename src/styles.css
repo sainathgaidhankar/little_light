@@ -1310,8 +1310,8 @@ textarea {
   .panel,
   .site-header,
   .site-footer {
-    padding: 18px;
-    border-radius: 22px;
+    padding: 14px;
+    border-radius: 20px;
   }
 
   .site-nav,
@@ -1322,6 +1322,7 @@ textarea {
 
   .site-nav {
     gap: 8px;
+    justify-content: flex-start;
   }
 
   .header-actions {
@@ -1330,15 +1331,114 @@ textarea {
   }
 
   .campaign-kpis {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .kpi-chip {
-    padding: 12px 14px;
+    padding: 10px 10px;
+    border-radius: 14px;
+  }
+
+  .kpi-chip span {
+    font-size: 0.68rem;
+    line-height: 1.1;
+  }
+
+  .kpi-chip strong {
+    font-size: 0.92rem;
   }
 
   .payment-modal {
     padding: 16px;
+  }
+
+  .brand-top {
+    gap: 10px;
+  }
+
+  .brand-mark {
+    font-size: 1rem;
+  }
+
+  .brand-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-badge {
+    padding: 0.34rem 0.68rem;
+    font-size: 0.7rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .hero-image {
+    min-height: 300px;
+  }
+
+  .hero-image-caption {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: none;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+  }
+
+  .hero-image-caption strong {
+    display: block;
+    font-size: 0.92rem;
+  }
+
+  .slider-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 1.4rem;
+  }
+
+  .slider-arrow.left {
+    left: 10px;
+  }
+
+  .slider-arrow.right {
+    right: 10px;
+  }
+
+  .story-panel,
+  .documents-panel,
+  .donation-panel,
+  .subtle-card,
+  .timeline-card,
+  .detail-card {
+    padding: 14px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .page-tabs {
+    gap: 12px;
+    padding: 0 2px 10px;
+    overflow-x: auto;
+  }
+
+  .page-tab {
+    padding-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  .bottom-bar-inner {
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .bottom-bar .primary-button {
+    min-width: 100%;
   }
 
   .payment-tab,
