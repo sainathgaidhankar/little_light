@@ -32,6 +32,7 @@ const upiApps = ['PhonePe', 'Google Pay', 'Paytm', 'BHIM', 'Other UPI app'];
 
 const initialState = {
   name: '',
+  contact: '',
   amount: '',
 };
 
@@ -75,6 +76,7 @@ export default function DonationForm({ onComplete }) {
     const result = await createDonationExecution({
       donor: {
         name: form.name,
+        phone: form.contact,
         createdFrom: paymentMethod,
       },
       amount: selectedAmount,
@@ -178,6 +180,16 @@ export default function DonationForm({ onComplete }) {
         </label>
 
         <label>
+          Contact number
+          <input
+            value={form.contact}
+            onChange={updateField('contact')}
+            placeholder="Your mobile number"
+            inputMode="tel"
+          />
+        </label>
+
+        <label>
           Donation amount
           <input
             type="number"
@@ -209,7 +221,8 @@ export default function DonationForm({ onComplete }) {
         {status ? <p className="status-message">{status}</p> : null}
         <p className="form-note">
           Choose a payment mode first. UPI opens the apps on your phone, and on desktop we show a
-          QR code. Net banking uses the bank details below.
+          QR code. Net banking uses the bank details below. Your name, contact, amount, reference,
+          and timestamp are saved in Appwrite as a pending donation.
         </p>
       </form>
 
@@ -266,7 +279,7 @@ export default function DonationForm({ onComplete }) {
                     <div className="payment-actions">
                       <button
                         type="button"
-                        className="primary-button"
+                        className="primary-button compact-button"
                         onClick={handleUpiPay}
                         disabled={submitting || !upiUrl}
                       >
@@ -287,7 +300,7 @@ export default function DonationForm({ onComplete }) {
                     <div className="payment-actions">
                       <button
                         type="button"
-                        className="primary-button"
+                        className="primary-button compact-button"
                         onClick={() => saveManualDonation('upi')}
                         disabled={submitting || !form.name || !selectedAmount}
                       >
@@ -338,7 +351,7 @@ export default function DonationForm({ onComplete }) {
                 <div className="payment-actions">
                   <button
                     type="button"
-                    className="primary-button"
+                    className="primary-button compact-button"
                     onClick={handleNetBanking}
                     disabled={submitting}
                   >

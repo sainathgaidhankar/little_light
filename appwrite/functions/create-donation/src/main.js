@@ -52,7 +52,7 @@ export default async ({ req, res, log, error }) => {
     } else {
       donorRecord = await databases.createDocument(databaseId, donorsCollectionId, ID.unique(), {
         name: donor.name,
-        phone: donor.phone || '',
+        phone: donor.phone || donor.contact || '',
       });
     }
 

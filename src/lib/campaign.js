@@ -1,5 +1,11 @@
+const normalizeCampaignTitle = (value) =>
+  String(value || '')
+    .replace(/\bBaby\s+(Aarav|Avara)\b/gi, 'Little Baby')
+    .replace(/\b(Aarav|Avara)\b/gi, 'Little Baby')
+    .trim();
+
 export const campaignDefaults = {
-  title: import.meta.env.VITE_CAMPAIGN_TITLE || '',
+  title: normalizeCampaignTitle(import.meta.env.VITE_CAMPAIGN_TITLE) || 'Help Little Baby Recover',
   beneficiaryName: import.meta.env.VITE_CAMPAIGN_BENEFICIARY_NAME || '',
   targetAmount: Number(import.meta.env.VITE_CAMPAIGN_TARGET_AMOUNT || 0),
   currency: import.meta.env.VITE_CAMPAIGN_CURRENCY || 'INR',

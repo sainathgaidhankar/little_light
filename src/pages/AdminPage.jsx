@@ -6,8 +6,8 @@ import { storage, databases, ids, ID } from '../lib/appwrite';
 export default function AdminPage() {
   const { user, login, logout, isAdmin } = useAuth();
   const { refreshCampaign, updates } = useCampaign();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('sainathgaidhankar@gmail.com');
+  const [password, setPassword] = useState('Sai@321');
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -78,11 +78,20 @@ export default function AdminPage() {
         <form className="panel auth-form" onSubmit={submitLogin}>
           <label>
             Email
-            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+            />
           </label>
           <label>
             Password
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
           </label>
           <button className="primary-button">Login</button>
           {message ? <p className="status-message">{message}</p> : null}

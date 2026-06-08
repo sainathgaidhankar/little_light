@@ -20,11 +20,11 @@ export default function ContactPage() {
           <div className="contact-grid">
             <div>
               <p className="meta-label">Email</p>
-              <strong>support@littlelightfund.org</strong>
+              <strong>sainathgaidhankar@gmail.com</strong>
             </div>
             <div>
               <p className="meta-label">Phone</p>
-              <strong>+91 90000 00000</strong>
+              <strong>+91 8867671005</strong>
             </div>
             <div>
               <p className="meta-label">Hours</p>
