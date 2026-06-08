@@ -2181,6 +2181,16 @@ textarea {
     padding: 8px 10px;
   }
 
+  .donation-form .primary-button,
+  .donation-form .ghost-button,
+  .payment-actions .primary-button,
+  .payment-actions .ghost-button,
+  .quick-amount,
+  .payment-tab,
+  .method-card {
+    padding: 4px;
+  }
+
   .payment-actions {
     gap: 6px;
   }
