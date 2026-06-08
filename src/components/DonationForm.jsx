@@ -67,6 +67,7 @@ export default function DonationForm({ onComplete }) {
   }, [form.name, selectedAmount]);
 
   const qrUrl = useMemo(() => buildUpiQrUrl(upiUrl), [upiUrl]);
+  const referenceValue = paymentReference.trim();
 
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
@@ -83,9 +84,9 @@ export default function DonationForm({ onComplete }) {
       currency: campaignDefaults.currency,
       paymentMethod,
       gateway: paymentMethod,
-      transactionRef: paymentReference || `${paymentMethod}-${Date.now()}`,
-      utrNumber: paymentReference || '',
-      status: 'pending',
+      transactionRef: referenceValue || `${paymentMethod}-${Date.now()}`,
+      utrNumber: referenceValue || '',
+      status: referenceValue ? 'verified' : 'pending',
     });
 
     if (!result.ok) {
@@ -132,7 +133,11 @@ export default function DonationForm({ onComplete }) {
 
     try {
       const pending = await recordDonation(paymentMethod);
-      setStatus('Donation saved in Appwrite as pending verification.');
+      setStatus(
+        referenceValue
+          ? 'Donation saved in Appwrite as verified.'
+          : 'Donation saved in Appwrite as pending verification.'
+      );
       setShowModal(false);
       onComplete?.(pending);
     } catch (err) {
@@ -342,7 +347,7 @@ export default function DonationForm({ onComplete }) {
                 <BankDetails />
                 <label>
                   Transaction / UTR number
-                  <input
+                    <input
                     value={paymentReference}
                     onChange={(event) => setPaymentReference(event.target.value)}
                     placeholder="Enter bank transaction ID"

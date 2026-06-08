@@ -26,10 +26,16 @@ export default async ({ req, res, error }) => {
       Query.limit(20),
     ]);
 
+    const isPaidDonation = (donation) =>
+      donation.status === 'verified' ||
+      donation.status === 'completed' ||
+      Boolean(String(donation.utrNumber || '').trim()) ||
+      Boolean(String(donation.transactionRef || '').trim());
+
     const totals = donations.documents.reduce(
       (acc, donation) => {
         const amount = Number(donation.amount || 0);
-        if (donation.status === 'verified' || donation.status === 'completed') {
+        if (isPaidDonation(donation)) {
           acc.raised += amount;
           acc.count += 1;
         }
@@ -43,9 +49,8 @@ export default async ({ req, res, error }) => {
       raised: totals.raised,
       donations: totals.count,
       updates: visibleUpdates.documents,
-      recentDonations: donations.documents
-        .filter((donation) => donation.status === 'verified' || donation.status === 'completed')
-        .slice(0, 5),
+      recentDonations: donations.documents.filter(isPaidDonation).slice(0, 5),
+      donationHistory: donations.documents.filter(isPaidDonation),
     });
   } catch (err) {
     error(String(err?.message || err));
