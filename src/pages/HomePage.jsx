@@ -43,16 +43,24 @@ export default function HomePage() {
   const movePatient = stepSlide(setPatientSlide, patientSlides.length);
   const moveDocument = stepSlide(setDocumentSlide, documentSlides.length);
   const openViewer = (type, index) => setViewer({ type, index });
+  const openQrViewer = () => setViewer({ type: 'qr', index: 0 });
   const closeViewer = () => setViewer(null);
-  const viewerSlides = viewer?.type === 'document' ? documentSlides : patientSlides;
+  const viewerSlides =
+    viewer?.type === 'document'
+      ? documentSlides
+      : viewer?.type === 'qr'
+        ? [qrImage]
+        : patientSlides;
   const viewerIndex = viewer?.index ?? 0;
   const viewerSrc = viewerSlides[viewerIndex % viewerSlides.length];
   const viewerTitle =
-    viewer?.type === 'document'
-      ? `Document ${viewerIndex + 1} of ${documentSlides.length}`
-      : `Patient image ${viewerIndex + 1} of ${patientSlides.length}`;
+    viewer?.type === 'qr'
+      ? 'Donation QR code'
+      : viewer?.type === 'document'
+        ? `Document ${viewerIndex + 1} of ${documentSlides.length}`
+        : `Patient image ${viewerIndex + 1} of ${patientSlides.length}`;
   const jumpViewer = (direction) => {
-    if (!viewer) return;
+    if (!viewer || viewer?.type === 'qr') return;
     setViewer((current) => ({
       ...current,
       index: (current.index + direction + viewerSlides.length) % viewerSlides.length,
@@ -274,12 +282,12 @@ export default function HomePage() {
               <h3 className="section-title" style={{ fontSize: '1.25rem' }}>
                 Donate via Paytm/Google Pay/PhonePe
               </h3>
-              <div className="qr-card">
+              <button type="button" className="qr-card" onClick={openQrViewer}>
                 <img src={qrImage} alt="Donation QR code" loading="lazy" decoding="async" />
                 <p className="donation-quick-note">
                   Scan the QR code to donate directly through UPI.
                 </p>
-              </div>
+              </button>
             </section>
 
             <section className="subtle-card">
@@ -350,24 +358,28 @@ export default function HomePage() {
               </button>
             </div>
             <div className="gallery-modal-view">
-              <button
-                type="button"
-                className="slider-arrow left"
-                onClick={() => jumpViewer(-1)}
-                aria-label="Previous image"
-              >
-                {'<'}
-              </button>
+              {viewer?.type !== 'qr' ? (
+                <button
+                  type="button"
+                  className="slider-arrow left"
+                  onClick={() => jumpViewer(-1)}
+                  aria-label="Previous image"
+                >
+                  {'<'}
+                </button>
+              ) : null}
               <img src={viewerSrc} alt={viewerTitle} className="gallery-modal-image" />
-              <button
-                type="button"
-                className="slider-arrow right"
-                onClick={() => jumpViewer(1)}
-                aria-label="Next image"
+              {viewer?.type !== 'qr' ? (
+                <button
+                  type="button"
+                  className="slider-arrow right"
+                  onClick={() => jumpViewer(1)}
+                  aria-label="Next image"
                 >
                   {'>'}
                 </button>
-              </div>
+              ) : null}
+            </div>
           </div>
         </div>
       ) : null}

@@ -886,6 +886,23 @@ textarea {
   gap: 12px;
 }
 
+.document-card-button {
+  width: 100%;
+  border: 1px solid var(--panel-border);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.document-card-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.document-card-copy {
+  min-width: 0;
+}
+
 .document-name {
   margin: 0;
   font-weight: 700;
@@ -972,6 +989,21 @@ textarea {
   max-height: 68vh;
   object-fit: contain;
   background: #0f172a;
+}
+
+.document-preview-modal {
+  width: min(980px, 100%);
+}
+
+.document-preview-frame {
+  min-height: 60vh;
+}
+
+.document-preview-iframe {
+  width: 100%;
+  min-height: 60vh;
+  border: 0;
+  background: #fff;
 }
 
 .gallery-modal-close-hit {
@@ -1143,6 +1175,18 @@ textarea {
   display: grid;
   gap: 10px;
   justify-items: center;
+}
+
+.qr-card {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.qr-card:disabled {
+  cursor: not-allowed;
 }
 
 .qr-card img {

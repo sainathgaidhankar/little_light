@@ -37,6 +37,7 @@ const initialState = {
 
 export default function DonationForm({ onComplete }) {
   const [form, setForm] = useState(initialState);
+  const [paymentReference, setPaymentReference] = useState('');
   const [status, setStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -80,7 +81,8 @@ export default function DonationForm({ onComplete }) {
       currency: campaignDefaults.currency,
       paymentMethod,
       gateway: paymentMethod,
-      transactionRef: `${paymentMethod}-${Date.now()}`,
+      transactionRef: paymentReference || `${paymentMethod}-${Date.now()}`,
+      utrNumber: paymentReference || '',
       status: 'pending',
     });
 
@@ -103,34 +105,33 @@ export default function DonationForm({ onComplete }) {
     setShowModal(true);
   };
 
-  const handleUpiPay = async () => {
-    setSubmitting(true);
+  const handleUpiPay = () => {
     setStatus('');
-
-    try {
-      const pending = await recordDonation('upi');
-      setStatus('Opening your UPI app. Complete the payment there.');
-      setShowModal(false);
-      onComplete?.(pending);
-      openUpiIntent({
-        amount: selectedAmount,
-        donorName: form.name,
-        onError: (message) => setStatus(message),
-      });
-    } catch (err) {
-      setStatus(err?.message || 'Something went wrong.');
-    } finally {
-      setSubmitting(false);
+    if (!upiUrl) {
+      setStatus('UPI ID is not configured.');
+      return;
     }
+
+    openUpiIntent({
+      amount: selectedAmount,
+      donorName: form.name,
+      onError: (message) => setStatus(message),
+    });
+    setStatus('Pay in your UPI app, then come back and save the transaction reference below.');
   };
 
-  const handleNetBanking = async () => {
+  const handleNetBanking = () => {
+    saveManualDonation('banktransfer');
+  };
+
+  const saveManualDonation = async (paymentMethod) => {
     setSubmitting(true);
     setStatus('');
 
     try {
-      const pending = await recordDonation('netbanking');
-      setStatus('Net banking selected. Use the bank details below to transfer the amount.');
+      const pending = await recordDonation(paymentMethod);
+      setStatus('Donation saved in Appwrite as pending verification.');
+      setShowModal(false);
       onComplete?.(pending);
     } catch (err) {
       setStatus(err?.message || 'Something went wrong.');
@@ -275,15 +276,45 @@ export default function DonationForm({ onComplete }) {
                         Copy UPI ID
                       </button>
                     </div>
+                    <label>
+                      Transaction / UTR number
+                      <input
+                        value={paymentReference}
+                        onChange={(event) => setPaymentReference(event.target.value)}
+                        placeholder="Enter UTR or transaction ID after payment"
+                      />
+                    </label>
+                    <div className="payment-actions">
+                      <button
+                        type="button"
+                        className="primary-button"
+                        onClick={() => saveManualDonation('upi')}
+                        disabled={submitting || !form.name || !selectedAmount}
+                      >
+                        Save paid amount in Appwrite
+                      </button>
+                    </div>
                     {copyStatus ? <p className="status-message">{copyStatus}</p> : null}
                   </div>
 
                   <div className="upi-qr-card">
-                    {qrUrl ? (
-                      <img className="upi-qr" src={qrUrl} alt="UPI payment QR code" />
-                    ) : (
-                      <div className="upi-qr-empty">Set a UPI ID to generate QR</div>
-                    )}
+                    <button
+                      type="button"
+                      className="qr-open-button"
+                      onClick={() => {
+                        if (!qrUrl) return;
+                        window.open(qrUrl, '_blank', 'noopener,noreferrer');
+                      }}
+                      disabled={!qrUrl}
+                      aria-label="Open UPI QR code"
+                    >
+                      {qrUrl ? (
+                        <img className="upi-qr" src={qrUrl} alt="UPI payment QR code" />
+                      ) : (
+                        <div className="upi-qr-empty">Set a UPI ID to generate QR</div>
+                      )}
+                    </button>
+                    <p className="donation-quick-note">Tap the QR to open it larger.</p>
                   </div>
                 </div>
               </div>
@@ -292,10 +323,18 @@ export default function DonationForm({ onComplete }) {
             {activeTab === 'netbanking' ? (
               <div className="payment-panel">
                 <p className="body-copy">
-                  Use your bank app or net banking to transfer the amount. The donation is stored
-                  as pending now and can be verified later using the transaction reference.
+                  Use your bank app or net banking to transfer the amount. After paying, enter the
+                  transaction reference below to store it in Appwrite.
                 </p>
                 <BankDetails />
+                <label>
+                  Transaction / UTR number
+                  <input
+                    value={paymentReference}
+                    onChange={(event) => setPaymentReference(event.target.value)}
+                    placeholder="Enter bank transaction ID"
+                  />
+                </label>
                 <div className="payment-actions">
                   <button
                     type="button"
@@ -303,9 +342,13 @@ export default function DonationForm({ onComplete }) {
                     onClick={handleNetBanking}
                     disabled={submitting}
                   >
-                    I have transferred the amount
+                    I have paid, save to Appwrite
                   </button>
                 </div>
+                <p className="form-note">
+                  Add the transaction reference above, then save it in Appwrite as a pending
+                  donation.
+                </p>
               </div>
             ) : null}
 
