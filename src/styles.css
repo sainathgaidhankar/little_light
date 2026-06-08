@@ -2197,7 +2197,12 @@ textarea {
 
   .payment-actions .compact-button {
     min-height: 38px;
-    padding: 0.5rem 0.7rem;
+    padding: 2px;
+  }
+
+  .payment-actions .ghost-button {
+    min-height: 38px;
+    padding: 2px;
   }
 
   .donation-submit {
@@ -2206,7 +2211,15 @@ textarea {
 
   .quick-amount {
     min-height: 40px;
-    padding: 0.52rem 0.4rem;
+    padding: 2px;
+  }
+
+  .payment-tab {
+    padding: 2px;
+  }
+
+  .method-card {
+    padding: 2px;
   }
 
   .bottom-bar-inner {
