@@ -29,6 +29,7 @@ export default function HomePage() {
   const [patientSlide, setPatientSlide] = useState(0);
   const [documentSlide, setDocumentSlide] = useState(0);
   const [viewer, setViewer] = useState(null);
+  const campaignUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   const hasStory = Boolean(campaign.story);
   const patientSlides = [patientImagePrimary, patientImageSecondary];
@@ -65,6 +66,11 @@ export default function HomePage() {
       ...current,
       index: (current.index + direction + viewerSlides.length) % viewerSlides.length,
     }));
+  };
+
+  const shareOnFacebook = () => {
+    const url = encodeURIComponent(campaignUrl || window.location.origin);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -271,7 +277,9 @@ export default function HomePage() {
           <section className="panel donation-panel">
             <ProgressBar raised={campaign.raised} target={campaign.targetAmount} />
             <div className="cta-stack">
-              <div className="sidebar-share">SHARE ON FACEBOOK</div>
+              <button type="button" className="sidebar-share" onClick={shareOnFacebook}>
+                SHARE ON FACEBOOK
+              </button>
               <Link to="/donate" className="primary-button cta-donate">
                 DONATE NOW
               </Link>

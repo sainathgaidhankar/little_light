@@ -23,7 +23,7 @@ export default function ContactPage() {
               <strong>sainathgaidhankar@gmail.com</strong>
             </div>
             <div>
-              <p className="meta-label">Phone</p>
+              <p className="meta-label">Phone (optional)</p>
               <strong>+91 8867671005</strong>
             </div>
             <div>
