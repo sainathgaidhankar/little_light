@@ -2164,21 +2164,39 @@ textarea {
   .payment-actions .primary-button,
   .payment-actions .ghost-button,
   .quick-amounts .quick-amount {
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin-top: 1px;
+    margin-bottom: 1px;
   }
 
   .quick-amounts {
-    gap: 6px;
+    gap: 4px;
   }
 
   .payment-tabs {
-    gap: 6px;
+    gap: 4px;
   }
 
   .payment-tab,
   .method-card {
-    padding: 10px 12px;
+    padding: 8px 10px;
+  }
+
+  .payment-actions {
+    gap: 6px;
+  }
+
+  .payment-actions .compact-button {
+    min-height: 38px;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .donation-submit {
+    min-height: 44px;
+  }
+
+  .quick-amount {
+    min-height: 40px;
+    padding: 0.52rem 0.4rem;
   }
 
   .bottom-bar-inner {

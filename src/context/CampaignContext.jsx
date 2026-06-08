@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { databases, functions, ids, realtime, storage, Query, appwriteEnabled } from '../lib/appwrite';
+import { functions, ids, realtime, storage, appwriteEnabled } from '../lib/appwrite';
 import {
   campaignDefaults,
   emptyDocuments,
@@ -23,58 +23,18 @@ async function fetchTotals() {
         if (parsed?.ok) return parsed;
       }
     } catch {
-      // fall through to collection-based fallback
+      // fall through to a safe empty response; the public site should not read
+      // private Appwrite collections directly.
     }
   }
 
-  if (
-    !appwriteEnabled ||
-    !ids.databaseId ||
-    !ids.donationsCollectionId ||
-    !ids.updatesCollectionId
-  ) {
-    return {
-      ok: true,
-      raised: 0,
-      donations: 0,
-      updates: [],
-      recentDonations: [],
-    };
-  }
-
-  const documents = await databases.listDocuments(ids.databaseId, ids.donationsCollectionId, [
-    Query.orderDesc('createdAtISO'),
-    Query.limit(100),
-  ]);
-
-  const updates = await databases.listDocuments(ids.databaseId, ids.updatesCollectionId, [
-    Query.equal('visible', true),
-    Query.orderDesc('createdAtISO'),
-    Query.limit(20),
-  ]);
-
-  const totals = documents.documents.reduce(
-    (acc, item) => {
-      if (item.status === 'verified' || item.status === 'completed') {
-        acc.raised += Number(item.amount || 0);
-        acc.donations += 1;
-      }
-      return acc;
-    },
-    { raised: 0, donations: 0 }
-  );
-
   return {
     ok: true,
-    raised: totals.raised,
-    donations: totals.donations,
-    updates: updates.documents,
-    recentDonations: documents.documents
-      .filter((item) => item.status === 'verified' || item.status === 'completed')
-      .slice(0, 5),
-    donationHistory: documents.documents.filter(
-      (item) => item.status === 'verified' || item.status === 'completed'
-    ),
+    raised: 0,
+    donations: 0,
+    updates: [],
+    recentDonations: [],
+    donationHistory: [],
   };
 }
 
