@@ -58,9 +58,6 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
-          <NavLink to="/admin" className="nav-link nav-link-admin" onClick={() => setOpen(false)}>
-            Admin
-          </NavLink>
         </nav>
 
         <div className="nav-meta">
@@ -81,9 +78,7 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              <Link className="ghost-button" to="/admin" onClick={() => setOpen(false)}>
-                Admin login
-              </Link>
+              <span className="session-pill">Campaign admin only</span>
             )}
           </div>
         </div>

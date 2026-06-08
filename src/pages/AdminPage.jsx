@@ -6,8 +6,8 @@ import { storage, databases, ids, ID } from '../lib/appwrite';
 export default function AdminPage() {
   const { user, login, logout, isAdmin } = useAuth();
   const { refreshCampaign, updates } = useCampaign();
-  const [email, setEmail] = useState('sainathgaidhankar@gmail.com');
-  const [password, setPassword] = useState('Sai@321');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -82,6 +82,7 @@ export default function AdminPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
+              placeholder="Enter admin email"
             />
           </label>
           <label>
@@ -91,6 +92,7 @@ export default function AdminPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              placeholder="Enter admin password"
             />
           </label>
           <button className="primary-button">Login</button>
